@@ -651,9 +651,9 @@ document.addEventListener("DOMContentLoaded", function () {
         .requestFullscreen()
         .then(() => {
             alert('thanh cong');
-            document.body.style.transform = "rotate(90deg)";
+            // document.body.style.transform = "rotate(90deg)";
         })
         .catch((err) => {
-            alert("lỗi con cac"+err)
+            alert("lỗi con cac")
         });
 });
