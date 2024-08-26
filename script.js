@@ -647,12 +647,13 @@ document.addEventListener("DOMContentLoaded", function () {
             processBar.style.width = `${process}%`;
         }, 500);
     });
-    screen.orientation
-        .lock("landscape")
+    document.documentElement
+        .requestFullscreen()
         .then(() => {
-            alert('xoay màn hình')
+            alert(success);
+            document.body.style.transform = "rotate(90deg)";
         })
-        .catch((error) => {
-            alert("Lỗi khi khóa hướng màn hình: ", error);
+        .catch((err) => {
+            alert("lỗi "+err)
         });
 });
