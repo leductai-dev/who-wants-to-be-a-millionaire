@@ -650,10 +650,10 @@ document.addEventListener("DOMContentLoaded", function () {
     document.documentElement
         .requestFullscreen()
         .then(() => {
-            alert(success);
+            alert('thanh cong');
             document.body.style.transform = "rotate(90deg)";
         })
         .catch((err) => {
-            alert("lỗi "+err)
+            alert("lỗi con cac"+err)
         });
 });
