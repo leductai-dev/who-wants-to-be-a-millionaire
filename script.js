@@ -647,4 +647,12 @@ document.addEventListener("DOMContentLoaded", function () {
             processBar.style.width = `${process}%`;
         }, 500);
     });
+    screen.orientation
+        .lock("landscape")
+        .then(() => {
+            alert('xoay màn hình')
+        })
+        .catch((error) => {
+            alert("Lỗi khi khóa hướng màn hình: ", error);
+        });
 });
