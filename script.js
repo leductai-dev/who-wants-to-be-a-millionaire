@@ -138,22 +138,19 @@ class Screen {
     hideStartBtn() {
         this.startBtn.classList.add("hidden");
     }
-    showLights() {
-        const lights = document.querySelectorAll(".light");
-        lights.forEach((light) => {
-            light.classList.add("light-rotate");
-            setTimeout(() => {
-                // light.classList.remove("light-rotate");
-            }, 5000);
-        });
-
-        const fakeLight = document.querySelectorAll(".fake-light");
-        fakeLight.forEach((light) => {
-            light.classList.add("light-running");
-            setTimeout(() => {
-                // light.classList.remove("light-rotate");
-            }, 5000);
-        });
+    showLights(timing) {
+        const light = document.querySelector(".light-effect");
+        light.classList.add("rotate");
+        light.classList.remove("blur");
+        setTimeout(() => this.hideLights(), timing);
+    }
+    updateLightsEffectTiming(timing) {
+        document.documentElement.style.setProperty("--animation-timing", timing);
+    }
+    hideLights() {
+        const light = document.querySelector(".light-effect");
+        light.classList.remove("rotate");
+        light.classList.add("blur");
     }
     onBtnStartGameClick(callback) {
         this.startBtn.addEventListener("click", () => {
@@ -296,7 +293,7 @@ class Game {
         this.isSelectedAnswer = false;
         this.currentQuestion = 1;
         this.startSound.start();
-        this.screen.showLights();
+        this.screen.showLights(12000);
         this.screen.showStartBtn();
         this.updateAudienceAnswer([0, 0, 0, 0]);
     }
@@ -326,6 +323,7 @@ class Game {
                 const winFirst5Sound = new Sound("Sound/win-5.mp3");
                 const introducePart2 = new Sound("Sound/introduce-part2.mp3");
                 winFirst5Sound.start();
+                this.screen.showLights(8000);
                 winFirst5Sound.onEnd(() => {
                     prizeMoney.classList.add("hidden");
                     this.popup.show();
@@ -365,6 +363,7 @@ class Game {
                 this.showCorrectAnswer();
                 this.questionBgSound.stop();
                 const sound = new Sound(`Sound/second5-correct-sound/${index}.mp3`);
+                this.delay(() => this.screen.showLights(2000), 5500);
                 sound.start();
                 sound.onEnd(() => process());
             };
@@ -510,10 +509,13 @@ class Game {
         });
         this.screen.hideAnswerTable();
         this.gameOverSound.start();
+        this.screen.updateLightsEffectTiming("4s");
+        this.screen.showLights(1000000000);
         this.popup.update(_script.stopGame(this.currentQuestion), () => {
             this.popup.update(_script.playAgain, () => {
                 this.popup.hide();
                 this.gameOverSound.stop();
+                this.screen.updateLightsEffectTiming("2s");
                 this.delay(() => {
                     this.resetGame();
                 }, 300);
@@ -545,6 +547,7 @@ class Game {
                 this.popup.update(_script.userAlready, () => {
                     this.startGameSound.stop();
                     this.startGame();
+                    this.screen.hideLights();
                 });
                 this.popup.render(3000);
                 this.startGameSound.onEnd(() => this.startGame());
@@ -622,38 +625,44 @@ class Loading {
     }
 }
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelector(".btn-join-game").addEventListener("click", () => {
-        document.querySelectorAll(".screen").forEach((screen) => {
-            screen.style.display = "none";
-        });
-        const element = document.querySelector(".play-screen");
-        element.style.display = "block";
-
-        const gameLoading = new Loading();
-        gameLoading.checkAllResourcesLoaded(() => {
-            setTimeout(() => {
-                document.querySelector(".loading").classList.add("hidden");
-                let game = new Game();
-                game.init();
-            }, 6000);
-        });
-        let process = 0;
-        const a = setInterval(() => {
-            process += 10;
-            if (process == 100) {
-                clearInterval(a);
-            }
-            const processBar = document.querySelector(".process-bar");
-            processBar.style.width = `${process}%`;
-        }, 500);
+    // document.body.requestFullscreen();
+    const gameLoading = new Loading();
+    gameLoading.checkAllResourcesLoaded(() => {
+        setTimeout(() => {
+            document.querySelector(".loading").classList.add("hidden");
+            let game = new Game();
+            game.init();
+        }, 6000);
     });
-    document.documentElement
-        .requestFullscreen()
-        .then(() => {
-            alert('thanh cong');
-            // document.body.style.transform = "rotate(90deg)";
-        })
-        .catch((err) => {
-            alert("lỗi con cac")
-        });
+    let process = 0;
+    const a = setInterval(() => {
+        process += 10;
+        if (process == 100) {
+            clearInterval(a);
+        }
+        const processBar = document.querySelector(".process-bar");
+        processBar.style.width = `${process}%`;
+    }, 500);
+
+    //responsive web
+    function maintainAspectRatio() {
+        const container = document.querySelector("#game");
+        const aspectRatio = 1920 / 1080;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        if (windowWidth / windowHeight > aspectRatio) {
+            // Màn hình rộng hơn tỷ lệ 16:9
+            container.style.height = `100%`;
+            container.style.width = `${windowHeight * aspectRatio}px`;
+        } else {
+            // Màn hình cao hơn tỷ lệ 16:9
+            container.style.width = `100%`;
+            container.style.height = `${windowWidth / aspectRatio}px`;
+        }
+        container.style.fontSize = `${container.offsetWidth / 106}px`;
+    }
+
+    maintainAspectRatio();
+    window.addEventListener("resize", maintainAspectRatio);
+    window.addEventListener("orientationchange", maintainAspectRatio);
 });

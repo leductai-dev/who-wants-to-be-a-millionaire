@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ai là triệu phú</title>
+    <link rel="stylesheet" href="./light-effect.css" as="style">
     <link rel="stylesheet" href="./css.css" as="style">
     <script src="./constant.js" defer></script>
     <script src="./script.js" defer></script>
@@ -13,12 +14,7 @@
 </head>
 
 <body>
-    <div class="screen wellcome-screen">
-        <button class="btn-join-game">
-            Vào Game
-        </button>
-    </div>
-    <div class="screen play-screen">
+    <div id="game" class="screen play-screen">
         <div class="game">
             <div class="loading">
                 <div class="loading-bar">
@@ -27,23 +23,56 @@
                     </div>
                 </div>
             </div>
-            <div class="light-effect">
-                <div class="stage-lights">
-                    <div class="light  ">
-                        <div class="brightness ">
-                            <span>&#9650;</span>
+            <div class="lights">
+                <div class="light-effect blur ">
+                    <div class="lights-bulb">
+                        <div class="light-bulb">
+                        </div>
+                        <div class="light-bulb">
                         </div>
                     </div>
-
-                    <div class="light  ">
-                        <div class="brightness ">
-                            <span>&#9650;</span>
+                    <div class="stage-lights">
+                        <div class="light">
+                            <div class="brightness ">
+                                <span>&#9650;</span>
+                            </div>
                         </div>
+                
+                        <div class="light">
+                            <div class="brightness ">
+                                <span>&#9650;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fake-lights">
+                        <div class="fake-light"></div>
+                        <div class="fake-light"></div>
                     </div>
                 </div>
-                <div class="fake-lights">
-                    <div class="fake-light"></div>
-                    <div class="fake-light"></div>
+                <div class="light-effect blur ">
+                    <div class="lights-bulb">
+                        <div class="light-bulb">
+                        </div>
+                        <div class="light-bulb">
+                        </div>
+                    </div>
+                    <div class="stage-lights">
+                        <div class="light">
+                            <div class="brightness ">
+                                <span>&#9650;</span>
+                            </div>
+                        </div>
+                
+                        <div class="light">
+                            <div class="brightness ">
+                                <span>&#9650;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fake-lights">
+                        <div class="fake-light"></div>
+                        <div class="fake-light"></div>
+                    </div>
                 </div>
             </div>
             <div class="popup translate-middle">
@@ -58,15 +87,15 @@
                 <div class="time">60</div>
             </div>
             <!-- <div class="game-header translate-header">
-                <div class="side-header">
-                    Left
-                </div>
-
-                <div class="side-header">
-                    Right
-                </div>
-
-            </div> -->
+                                <div class="side-header">
+                                    Left
+                                </div>
+                
+                                <div class="side-header">
+                                    Right
+                                </div>
+                
+                            </div> -->
             <div class="prize-money hidden display">
                 <div class="helper">
                     <button id="btn-remove-half" class="btn-helper">
@@ -150,24 +179,24 @@
                     <img width="100%" height="auto" src='./Image/question.png' alt=''>
                     <span>Câu 1:</span>
                 </div>
-                    <div class="answers">
-                            <div class="answer">
-                                <img width="100%" height="auto" src="Image/normal-l.png" alt=''>
-                                <span>A.</span>
-                            </div>
-                            <div class="answer">
-                                <img width="100%" height="auto" src="Image/normal-r.png" alt=''>
-                                <span>B.</span>
-                            </div>
-                            <div class="answer">
-                                <img width="100%" height="auto" src="Image/normal-l.png" alt=''>
-                                <span>C.</span>
-                            </div>
-                            <div class="answer">
-                                <img width="100%" height="auto" src="Image/normal-r.png" alt=''>
-                                <span>D.</span>
-                            </div>
+                <div class="answers">
+                    <div class="answer">
+                        <img width="100%" height="auto" src="Image/normal-l.png" alt=''>
+                        <span>A.</span>
                     </div>
+                    <div class="answer">
+                        <img width="100%" height="auto" src="Image/normal-r.png" alt=''>
+                        <span>B.</span>
+                    </div>
+                    <div class="answer">
+                        <img width="100%" height="auto" src="Image/normal-l.png" alt=''>
+                        <span>C.</span>
+                    </div>
+                    <div class="answer">
+                        <img width="100%" height="auto" src="Image/normal-r.png" alt=''>
+                        <span>D.</span>
+                    </div>
+                </div>
             </div>
             <div class="table-viewer-answer hidden ">
                 <div class="table-col">
