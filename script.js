@@ -81,6 +81,105 @@ class Sound {
         this.fileName = filename;
     }
 }
+class AdvisoryGroup {
+    constructor(game) {
+        this.game = game;
+        this.selectedCount = 0;
+        this.dataAnswers = null;
+        this.persons = document.querySelectorAll(".advisory-group > .person");
+        this.listener();
+    }
+    listener() {
+        if (!this.persons) return;
+        this.persons.forEach((person, index) => {
+            person.addEventListener("click", () => {
+                this.onBtnPersonClick(index);
+            });
+        });
+    }
+    updateAnswerData(answerId) {
+        if (!answerId) return;
+        const dataAnswers = {
+            1: {
+                _data: ["A", "A", "A"],
+                _remain: ["B", "C", "D"],
+            },
+            2: {
+                _data: ["B", "B", "B"],
+                _remain: ["A", "C", "D"],
+            },
+            3: {
+                _data: ["C", "C", "C"],
+                _remain: ["A", "B", "D"],
+            },
+            4: {
+                _data: ["D", "D", "D"],
+                _remain: ["A", "B", "C"],
+            },
+        };
+        const _dataAnswers = dataAnswers[answerId]._data;
+        const dataRemain = dataAnswers[answerId]._remain;
+        const isSomeAnswerRemoved = this.game.answers.some((answer) => answer.isRemoved === true);
+        let onlyWrongAnswer = null;
+        if (isSomeAnswerRemoved) {
+            this.game.answers.forEach((answer, index) => {
+                if (answer.id != answerId && !answer.isRemoved) {
+                    onlyWrongAnswer = ["A", "B", "C", "D"][index];
+                }
+            });
+        }
+        while (_dataAnswers.length < 5) {
+            const insertIndex = Math.round(Math.random() * 3);
+            const insertAnswer = isSomeAnswerRemoved ? onlyWrongAnswer : dataRemain[Math.round(Math.random() * 2)];
+            _dataAnswers.splice(insertIndex, 0, insertAnswer);
+        }
+        this.dataAnswers = _dataAnswers;
+        console.log(this.dataAnswers);
+    }
+
+    onBtnPersonClick(index) {
+        if (!this.persons) return;
+        const person = this.persons[index];
+        if (person.classList.contains("show")) return;
+        if (this.selectedCount == 3) {
+            alert("Ban đã chọn đủ 3 người trong tổ tư vấn!");
+            return;
+        }
+        if (this.selectedCount == 2) {
+            this.game.isUsingAnotherHelper = false;
+            this.game.waitSelectAdvisoryGroupSound.stop();
+            this.game.selectAdvisoryGroupDoneSound.start();
+            this.game.selectAdvisoryGroupDoneSound.onEnd(() => {
+                this.game.questionBgSound.start(true);
+                this.game.timer.updateTime();
+            });
+        }
+        this.showAnswer(index);
+        person.classList.add("show");
+        this.selectedCount++;
+    }
+
+    showAnswer(index) {
+        if (!this.dataAnswers) return;
+        if (this.persons.length < 1) return;
+        const element = this.persons[index].querySelector(".person-answer");
+        element.innerText = this.dataAnswers[index];
+    }
+    showHelperList() {
+        document.querySelector(".advisory-group").classList.add("show");
+    }
+    hideHelperList() {
+        document.querySelector(".advisory-group").classList.remove("show");
+    }
+
+    reset() {
+        this.persons.forEach((person) => {
+            person.classList.remove("show");
+        });
+        this.selectedCount = 0;
+        this.dataAnswers = [];
+    }
+}
 
 class Answer {
     constructor(game, answer, index) {
@@ -94,7 +193,7 @@ class Answer {
     }
     onBtnAnswerClick(handleUserSelectAnswer) {
         this.element.addEventListener("click", () => {
-            if (this.game.isSelectedAnswer) return;
+            if (this.game.isSelectedAnswer || this.game.isUsingAnotherHelper) return;
             this.showSelectedAnswer();
             handleUserSelectAnswer(this.id, this.index);
         });
@@ -138,31 +237,38 @@ class Screen {
     hideStartBtn() {
         this.startBtn.classList.add("hidden");
     }
-    showLights(timing) {
-        const light = document.querySelector(".light-effect");
-        light.classList.add("rotate");
-        light.classList.remove("blur");
+    showLights(timing, speed) {
+        this.updateLightsEffectTiming(speed);
+        const lights = document.querySelector(".lights");
+        lights.classList.add("rotate");
+        lights.classList.remove("hidden", "blur");
         setTimeout(() => this.hideLights(), timing);
+    }
+    hideLights() {
+        const lights = document.querySelector(".lights");
+        if (lights.classList.contains("blur")) return;
+        lights.classList.add("blur");
+        this.game.delay(() => {
+            lights.classList.remove("rotate");
+        }, 3200);
     }
     updateLightsEffectTiming(timing) {
         document.documentElement.style.setProperty("--animation-timing", timing);
     }
-    hideLights() {
-        const light = document.querySelector(".light-effect");
-        light.classList.remove("rotate");
-        light.classList.add("blur");
-    }
     onBtnStartGameClick(callback) {
         this.startBtn.addEventListener("click", () => {
             this.hideStartBtn();
+            this.hideLights();
             callback();
         });
     }
 
     onBtnRemoveAnswerClick(callback) {
         const handleClick = () => {
-            if (this.game.isSelectedAnswer || this.game.helper.isRemoveWrongUsed) return;
-            this.game.helper.isRemoveWrongUsed = true;
+            if (!this.game.isCanUsed("isRemoveWrongUsed")) return;
+            this.game.isUsingAnotherHelper = true;
+            this.game.helpers.isRemoveWrongUsed = true;
+            this.game.questionSound.stop();
             element.innerHTML = ` <img src='Image/50-50-used.webp' alt=''>`;
             const removeSound = new Sound("Sound/remove-wrong.mp3");
             removeSound.start();
@@ -174,46 +280,68 @@ class Screen {
         element.addEventListener("click", handleClick);
     }
 
-    onBtnAskViewerClick(callback) {
+    onBtnAskAudienceClick(callback) {
         const handleClick = () => {
-            console.log(this.game.helper);
-            if (this.game.isSelectedAnswer || this.game.helper.isAskAudienceUsed) return;
-            this.game.helper.isAskAudienceUsed = true;
+            if (!this.game.isCanUsed("isAskAudienceUsed")) return;
+            this.game.isUsingAnotherHelper = true;
+            this.game.helpers.isAskAudienceUsed = true;
+            this.game.questionSound.stop();
+            this.game.timer.stopUpdateTime();
             element.innerHTML = ` <img src='Image/ask-viewer-used.webp' alt=''>`;
             const askViewSound = new Sound("Sound/ask-viewer-sound.mp3");
             askViewSound.start();
-            this.answerTable.classList.remove("hidden");
-
+            this.showAnswerTable();
+            this.game.advisoryGroupHelper.hideHelperList();
             askViewSound.onEnd(() => {
-                const waitViewerAnswerSound = new Sound("Sound/wait-viewer-answer.mp3");
-                waitViewerAnswerSound.start();
+                this.game.waitViewerAnswerSound.start();
                 this.game.questionBgSound.stop();
                 const answerCol = document.querySelectorAll(".result");
                 setTimeout(() => {
                     answerCol.forEach((col) => {
                         col.classList.add("result-animation");
                     });
-                }, 1500);
-                waitViewerAnswerSound.onEnd(() => {
+                }, 1300);
+                this.game.waitViewerAnswerSound.onEnd(() => {
                     this.game.questionBgSound.start(true);
+
+                    this.game.timer.updateTime();
+                });
+                this.game.delay(() => {
                     answerCol.forEach((col) => {
                         col.classList.remove("result-animation");
                     });
-                });
-                this.game.delay(() => {
                     callback();
-                }, 13000);
+                }, 13500);
             });
         };
         const element = document.querySelector("#btn-audience-help");
         element.addEventListener("click", handleClick);
     }
 
+    onBtnAskAdvisoryGroupClick(callback) {
+        const handleClick = () => {
+            if (!this.game.isCanUsed("isAdvisoryUsed")) return;
+            element.innerHTML = ` <img src='Image/advisory-group-used.webp' alt=''>`;
+            this.game.isUsingAnotherHelper = true;
+            this.game.helpers.isAdvisoryUsed = true;
+            this.game.questionSound.stop();
+            this.game.timer.stopUpdateTime();
+            const sound = new Sound("./Sound/ask-advisory-group.mp3");
+            sound.start();
+            callback();
+        };
+        const element = document.querySelector("#btn-advisory-help");
+        element.addEventListener("click", handleClick);
+    }
+
     hideAnswerTable() {
         this.answerTable.classList.add("hidden");
     }
+    showAnswerTable() {
+        this.answerTable.classList.remove("hidden");
+    }
     updatePrizeMoney() {
-        const currentQuestion = this.game.currentQuestion;
+        const currentQuestion = this.game.questionNumber;
         const items = document.querySelectorAll(".point-item");
         items.forEach((item) => {
             item.classList.remove("current-lever");
@@ -221,81 +349,229 @@ class Screen {
         items[items.length - currentQuestion].classList.add("current-lever");
     }
     reset() {
-        this.hideAnswerTable;
+        this.hideAnswerTable();
         //button remove-half-answer
         const btnRemoveHalf = document.querySelector("#btn-remove-half");
         btnRemoveHalf.innerHTML = ` <img src='Image/50-50.webp' alt=''>`;
-        btnRemoveHalf.setAttribute("data-used", false);
         //button ask-audience-help
         const btnAskAudience = document.querySelector("#btn-audience-help");
         btnAskAudience.innerHTML = ` <img src='Image/ask-viewer.webp' alt=''>`;
-        btnAskAudience.setAttribute("data-used", false);
+        //button advisory-group-help
+        const btnAdvisoryGroup = document.querySelector("#btn-advisory-help");
+        btnAdvisoryGroup.innerHTML = ` <img src='Image/advisory-group.webp' alt=''>`;
+    }
+}
+class Dot {
+    constructor(loader, ctx, angle, radius, size, color, opacity) {
+        this.ctx = ctx;
+        this.angle = angle;
+        this.radius = radius;
+        this.color = color;
+        this.size = size;
+        this.opacity = opacity;
+        this.loader = loader;
+    }
+    draw() {
+        const x = canvas.width / 2 + Math.cos(this.angle) * this.radius;
+        const y = canvas.height / 2 + Math.sin(this.angle) * this.radius;
+        const blurAmount = 5;
+        this.ctx.shadowColor = "blue";
+        this.ctx.shadowBlur = blurAmount;
+        // this.ctx.strokeStyle = "black";
+        // this.ctx.lineWidth = 2;
+        this.ctx.globalAlpha = this.opacity;
+        this.ctx.fillStyle = this.color;
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, this.size, 0, Math.PI * 2, false);
+        this.ctx.fill();
+        // this.ctx.stroke();
+        this.ctx.closePath();
+    }
+    updateOpacity() {
+        this.opacity = this.opacity - 1 / this.loader.numberOfDots;
+        if (this.opacity <= 0) this.opacity = 1;
+    }
+    updatePosition() {
+        this.angle += 0.02;
     }
 }
 class Timer {
-    constructor(time) {
-        this.currentTime = time;
+    constructor(game) {
+        this.game = game;
+        this.currentTime = TIME;
         this.timerElement = document.querySelector(".time");
         this.timerInterval = null;
     }
-    startUpdateTimer() {
+    updateTime() {
         this.timerInterval = setInterval(() => {
-            this.currentTime -= 1;
-            this.timerElement.innerHTML = this.currentTime;
+            if (this.currentTime == 0) {
+                this.stopUpdateTime();
+                this.game.questionBgSound.stop();
+                this.game.timeUpSound.start();
+                this.game.timeUpSound.onEnd(() => this.game.stopGame());
+                return;
+            }
+            this.reset(this.currentTime - 1);
         }, 1000);
     }
-
-    updateTime(time) {
+    reset(time) {
         this.currentTime = time;
         this.timerElement.innerHTML = this.currentTime;
     }
-    stopUpdateTimer() {
+    stopUpdateTime() {
         clearInterval(this.timerInterval);
+    }
+}
+class Loader {
+    constructor(game) {
+        this.game = game;
+        this.ctx = null;
+        this.dots = [];
+        this.numberOfDots = 20;
+        this.img = new Image();
+        this.img.src = "./Image/logo1.png";
+        this.imgLoaded = false;
+        this.img.onload = () => {
+            this.imgLoaded = true;
+            this.draw();
+        };
+        this.loadingInterval = null;
+        this.rotateAnimation = null;
+        this.init();
+    }
+    init() {
+        const canvas = document.querySelector("#canvas");
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        this.ctx = canvas.getContext("2d");
+    }
+
+    drawTimer() {
+        this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // this.ctx.strokeStyle = "black";
+        // this.ctx.lineWidth = 2;
+        this.ctx.beginPath();
+        this.ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, 0, Math.PI * 2, false);
+        // this.ctx.fill();
+        // this.ctx.stroke();
+        this.ctx.closePath();
+        this.ctx.textAlign = "center";
+        this.ctx.textBaseline = "middle";
+        this.ctx.font = `${canvas.width * 0.3}px Arial`;
+        this.ctx.fillStyle = "white";
+        this.ctx.fillText(this.currentTime, canvas.width / 2, canvas.height / 2);
+        this.loadingInterval = null;
+        this.drawDots();
+    }
+
+    createDots(effect) {
+        this.dots = [];
+        const dotSize = canvas.width * 0.025;
+        const radius = (canvas.width - canvas.width * 0.1) / 2;
+        const color = "#fff";
+        for (let i = 0; i < this.numberOfDots; i++) {
+            const angle = (i / this.numberOfDots) * 2 * Math.PI;
+            const opacity = effect ? i / this.numberOfDots : 1;
+            const dot = new Dot(this, this.ctx, angle, radius, dotSize, color, opacity);
+            this.dots.push(dot);
+        }
+    }
+    draw() {
+        this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this.drawImage();
+        this.dots.forEach((dot) => {
+            dot.draw();
+        });
+    }
+    drawImage() {
+        if (this.imgLoaded) {
+            const imgWidth = canvas.width - canvas.width * 0.15;
+            const imgHeight = canvas.width - canvas.width * 0.15;
+            this.ctx.globalAlpha = 1;
+            this.ctx.drawImage(
+                this.img,
+                (canvas.width - imgWidth) / 2,
+                (canvas.width - imgWidth) / 2,
+                imgWidth,
+                imgHeight
+            );
+        }
+    }
+
+    showWithRotateEffect() {
+        clearInterval(this.loadingInterval);
+        this.createDots(false);
+        this.rotate();
+    }
+    rotate() {
+        this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this.drawImage();
+        this.dots.forEach((dot) => {
+            dot.updatePosition();
+            dot.draw();
+        });
+        this.rotateAnimation = requestAnimationFrame(() => this.rotate());
+    }
+
+    showWithLoadingEffect() {
+        cancelAnimationFrame(this.rotateAnimation);
+        this.createDots(true);
+        this.loading();
+    }
+    loading() {
+        this.loadingInterval = setInterval(() => {
+            this.dots.forEach((dot) => {
+                dot.updateOpacity();
+            });
+            this.draw();
+        }, 100);
     }
 }
 const TIME = 60;
 class Game {
     constructor() {
-        this.currentQuestion = 1;
+        this.questionNumber = 1;
         this.screen = new Screen(this);
-        this.listener();
         this.isSelectedAnswer = false;
-        this.questionBgSound = null;
         this.questionSound = null;
-        this.wellcomeSound = null;
-        this.startSound = null;
         this.correctSound = null;
-        this.finalAnswerSound = null;
-        this.wrongAnswerSound = null;
-        this.timer = new Timer(TIME);
-        this.gameOverSound = null;
+        this.timer = new Timer(this);
         this.answers = [];
         this.isPlayAgain = false;
-        this.startGameSound = null;
         this.popup = new Popup("");
-        this.helper = null;
-    }
-    init() {
-        this.questionSound = new Sound(QandA[this.currentQuestion].sound);
+        this.helpers = null;
+        this.question = null;
         this.questionBgSound = new Sound("Sound/first5BgSound.mp3");
         this.finalAnswerSound = new Sound("Sound/final-answer.mp3");
         this.startSound = new Sound("Sound/start-sound.mp3");
         this.gameOverSound = new Sound("Sound/game-over.mp3");
         this.startGameSound = new Sound("Sound/start-game.mp3");
         this.wrongAnswerSound = new Sound(`Sound/wrong-sound.mp3`);
-        this.helper = {
+        this.timeUpSound = new Sound(`Sound/time-up.mp3`);
+        this.waitSelectAdvisoryGroupSound = new Sound("./Sound/ask-advisory-group-bg-sound.mp3");
+        this.selectAdvisoryGroupDoneSound = new Sound("./Sound/ask-advisory-group-done.mp3");
+        this.waitViewerAnswerSound = new Sound("Sound/wait-viewer-answer.mp3");
+        this.advisoryGroupHelper = new AdvisoryGroup(this);
+        this.isUsingAnotherHelper = false;
+        this.listener();
+        this.ctx = null;
+    }
+    init() {
+        this.questionNumber = 1;
+        this.question = Questions[this.questionNumber];
+        this.questionSound = new Sound(this.question.sound);
+        this.helpers = {
             isRemoveWrongUsed: false,
             isAskAudienceUsed: false,
             isCallUsed: false,
             isAdvisoryUsed: false,
         };
-        this.timer.updateTime(TIME);
+
         this.isSelectedAnswer = false;
-        this.currentQuestion = 1;
         this.startSound.start();
-        this.screen.showLights(12000);
+        this.screen.showLights(10000000, "2s");
+        this.delay(() => this.screen.updateLightsEffectTiming("4s"), 12000);
         this.screen.showStartBtn();
-        this.updateAudienceAnswer([0, 0, 0, 0]);
     }
 
     delay(func, timing) {
@@ -307,10 +583,10 @@ class Game {
     handleUserSelectAnswer(answerId, index) {
         this.isSelectedAnswer = true;
         this.startSound.stop(); // need remove
-        this.timer.stopUpdateTimer();
+        this.timer.stopUpdateTime();
         this.questionSound.stop();
         const process = () => {
-            if (this.currentQuestion == 5) {
+            if (this.questionNumber == 5) {
                 this.questionBgSound.stop();
                 this.questionBgSound = new Sound("Sound/next5BgSound.mp3");
                 const display = document.querySelectorAll(".game>div.display");
@@ -323,7 +599,7 @@ class Game {
                 const winFirst5Sound = new Sound("Sound/win-5.mp3");
                 const introducePart2 = new Sound("Sound/introduce-part2.mp3");
                 winFirst5Sound.start();
-                this.screen.showLights(8000);
+                this.screen.showLights(8000, "2s");
                 winFirst5Sound.onEnd(() => {
                     prizeMoney.classList.add("hidden");
                     this.popup.show();
@@ -341,7 +617,7 @@ class Game {
             this.showQuestion();
             this.readQuestion();
         };
-        if (this.currentQuestion <= 5) {
+        if (this.questionNumber <= 5) {
             const correctAnswerProcess = () => {
                 const sound = new Sound(`Sound/first5-correct-sound/${index}.mp3`);
                 const bgSound = new Sound(`Sound/first5-correct-sound/correct-sound.mp3`);
@@ -357,13 +633,13 @@ class Game {
             }, 500);
             return;
         }
-        if (this.currentQuestion > 5) {
+        if (this.questionNumber > 5) {
             this.finalAnswerSound.start();
             const correctAnswerProcess = () => {
                 this.showCorrectAnswer();
                 this.questionBgSound.stop();
                 const sound = new Sound(`Sound/second5-correct-sound/${index}.mp3`);
-                this.delay(() => this.screen.showLights(2000), 5500);
+                this.delay(() => this.screen.showLights(2000, "2s"), 5500);
                 sound.start();
                 sound.onEnd(() => process());
             };
@@ -374,7 +650,7 @@ class Game {
         }
     }
     checkAnswer(answerId, correctAnswerProcess) {
-        if (answerId == QandA[this.currentQuestion].correctID) {
+        if (answerId == this.question.correctId) {
             correctAnswerProcess();
         } else {
             this.showCorrectAnswer();
@@ -385,23 +661,31 @@ class Game {
     }
 
     updateQuestion() {
-        this.currentQuestion += 1;
+        this.questionNumber += 1;
+        this.question = Questions[this.questionNumber];
         this.screen.hideAnswerTable();
+        this.advisoryGroupHelper.hideHelperList();
         this.isSelectedAnswer = false;
-        this.timer.updateTime(TIME);
+        this.timer.reset(TIME);
     }
 
     showCorrectAnswer() {
         this.answers.forEach((answer) => {
-            if (answer.id == QandA[this.currentQuestion].correctID) {
+            if (answer.id == this.question.correctId) {
                 answer.showCorrectAnswer();
             }
         });
     }
+    isCanUsed(helper) {
+        if (this.isSelectedAnswer) return false;
+        if (this.helpers[helper]) return false;
+        if (this.isUsingAnotherHelper) return false;
+        return true;
+    }
 
     createAnswer() {
         this.answers = [];
-        const answers = QandA[this.currentQuestion].answers;
+        const answers = this.question.answers;
         answers.forEach((answer, index) => {
             this.answers.push(new Answer(this, answer, index));
         });
@@ -411,7 +695,7 @@ class Game {
         this.createAnswer();
         this.screen.updatePrizeMoney();
         const questionElement = document.querySelector(".question > span");
-        questionElement.innerHTML = QandA[this.currentQuestion].question;
+        questionElement.innerHTML = this.question.question;
         this.answers.forEach((answer) => {
             answer.reset();
             answer.render();
@@ -422,11 +706,11 @@ class Game {
     }
 
     readQuestion() {
-        this.questionSound = new Sound(QandA[this.currentQuestion].sound);
+        this.questionSound = new Sound(this.question.sound);
         this.questionSound.start();
-        this.questionSound.onEnd(() => {
-            this.timer.startUpdateTimer();
-        });
+        this.timer.updateTime();
+        // this.questionSound.onEnd(() => {
+        // });
         this.questionBgSound.isStopped() && this.questionBgSound.start(true);
     }
     handleBtnRemoveAnswerClick() {
@@ -434,13 +718,13 @@ class Game {
         let deletedIndex = Infinity;
         while (deletedCount < 2) {
             const deleteIndex = Math.floor(Math.random() * this.answers.length);
-            if (QandA[this.currentQuestion].correctID == this.answers[deleteIndex].id || deletedIndex == deleteIndex)
-                continue;
+            if (this.question.correctId == this.answers[deleteIndex].id || deletedIndex == deleteIndex) continue;
             this.answers[deleteIndex].remove();
             this.answers[deleteIndex].isRemoved = true;
             deletedIndex = deleteIndex;
             deletedCount++;
         }
+        this.isUsingAnotherHelper = false;
     }
 
     updateAudienceAnswer(percents) {
@@ -461,7 +745,7 @@ class Game {
             if (this.answers[i].isRemoved) {
                 continue;
             }
-            if (this.answers[i].id == QandA[this.currentQuestion].correctID) {
+            if (this.answers[i].id == this.question.correctId) {
                 percents[i] = 30;
             }
             if (i == 3) {
@@ -473,11 +757,7 @@ class Game {
             percents[i] += randomPercent;
             sumPercent -= randomPercent;
         }
-        console.log("loooooooo");
         if (sumPercent != 0) {
-            console.log(sumPercent);
-            console.log(Math.ceil(sumPercent / 2));
-            console.log(Math.floor(sumPercent / 2));
             let foundOne = false;
             for (let i = 0; i < 4; i++) {
                 if (this.answers[i].isRemoved) continue;
@@ -490,6 +770,7 @@ class Game {
             }
         }
         this.updateAudienceAnswer(percents);
+        this.isUsingAnotherHelper = false;
     }
     startGame() {
         this.popup.hide();
@@ -508,14 +789,13 @@ class Game {
             element.classList.add("hidden");
         });
         this.screen.hideAnswerTable();
+        this.advisoryGroupHelper.hideHelperList();
         this.gameOverSound.start();
-        this.screen.updateLightsEffectTiming("4s");
-        this.screen.showLights(1000000000);
-        this.popup.update(_script.stopGame(this.currentQuestion), () => {
+        this.screen.showLights(1000000000, "4s");
+        this.popup.update(_script.stopGame(this.questionNumber), () => {
             this.popup.update(_script.playAgain, () => {
                 this.popup.hide();
                 this.gameOverSound.stop();
-                this.screen.updateLightsEffectTiming("2s");
                 this.delay(() => {
                     this.resetGame();
                 }, 300);
@@ -531,6 +811,9 @@ class Game {
         this.isPlayAgain = true;
         this.init();
         this.screen.reset();
+        this.timer.reset(TIME);
+        this.advisoryGroupHelper.reset();
+        this.updateAudienceAnswer([0, 0, 0, 0]);
     }
 
     showGuidePopup() {
@@ -568,84 +851,43 @@ class Game {
             this.startGame();
         }, 100);
     }
+    handleBtnAskAdvisoryClick() {
+        this.advisoryGroupHelper.updateAnswerData(this.question.correctId);
+        this.screen.hideAnswerTable();
+        this.popup.update(_script.advisoryGroupHelper, () => {
+            this.popup.hide();
+            this.advisoryGroupHelper.showHelperList();
+            this.questionBgSound.stop();
+            this.waitSelectAdvisoryGroupSound.start(true);
+        });
+        this.popup.show();
+        this.popup.render(6000);
+    }
     listener() {
         this.screen.onBtnRemoveAnswerClick(() => {
             this.handleBtnRemoveAnswerClick();
         });
-        this.screen.onBtnAskViewerClick(() => {
+        this.screen.onBtnAskAudienceClick(() => {
             this.handleBtnAskViewerClick();
         });
-
+        this.screen.onBtnAskAdvisoryGroupClick(() => {
+            this.handleBtnAskAdvisoryClick();
+        });
         this.screen.onBtnStartGameClick(() => {
             this.handleStartGameClick();
         });
     }
-
-    update() {}
-    draw() {}
 }
-class Loading {
+class Responsive {
     constructor() {
-        this.images = resource.images;
-        this.audios = resource.audios;
-        this.imagesLoadedCount = 0;
-        this.audiosLoadedCount = 0;
+        this.maintainAspectRatio();
+        this.listener();
     }
-    isAllResourceLoaded() {
-        if (this.imagesLoadedCount == this.images.length && this.audiosLoadedCount == this.audios.length) {
-            return true;
-        }
-        return false;
+    listener() {
+        window.addEventListener("resize", this.maintainAspectRatio);
+        window.addEventListener("orientationchange", this.maintainAspectRatio);
     }
-    checkAllResourcesLoaded(handleLoaded) {
-        this.images.forEach((imageSrc) => {
-            const image = new Image(imageSrc);
-            image.onload = () => {
-                this.imagesLoadedCount++;
-                if (this.isAllResourceLoaded()) {
-                    handleLoaded();
-                }
-            };
-            img.onerror = () => {
-                alert("Có lỗi xảy ra trong quá trình tải game");
-            };
-        });
-        this.audios.forEach((audioSrc) => {
-            const audio = new Audio(audioSrc);
-            audio.addEventListener("canplaythrough", () => {
-                this.audiosLoadedCount++;
-                if (this.isAllResourceLoaded()) {
-                    handleLoaded();
-                }
-            });
-            audio.onerror = () => {
-                alert("Có lỗi xảy ra trong quá trình tải game");
-            };
-        });
-    }
-}
-document.addEventListener("DOMContentLoaded", function () {
-    // document.body.requestFullscreen();
-    const gameLoading = new Loading();
-    gameLoading.checkAllResourcesLoaded(() => {
-        setTimeout(() => {
-            document.querySelector(".loading").classList.add("hidden");
-            let game = new Game();
-            game.init();
-        }, 6000);
-    });
-    let process = 0;
-    const a = setInterval(() => {
-        process += 10;
-        if (process == 100) {
-            clearInterval(a);
-        }
-        const processBar = document.querySelector(".process-bar");
-        processBar.style.width = `${process}%`;
-    }, 500);
-
-    //responsive web
-    function maintainAspectRatio() {
+    maintainAspectRatio() {
         const container = document.querySelector("#game");
         const aspectRatio = 1920 / 1080;
         const windowWidth = window.innerWidth;
@@ -661,8 +903,70 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         container.style.fontSize = `${container.offsetWidth / 106}px`;
     }
+}
+class Loading {
+    constructor() {
+        this.images = resource.images;
+        this.audios = resource.audios;
+        this.loadedCount = 0;
+    }
+    updateProcess() {
+        this.loadedCount += 1;
+        let sum = this.images.length + this.audios.length;
+        const percent = (this.loadedCount / sum) * 100;
+        const processBar = document.querySelector(".process-bar");
+        processBar.style.width = `${percent}%`;
+    }
 
-    maintainAspectRatio();
-    window.addEventListener("resize", maintainAspectRatio);
-    window.addEventListener("orientationchange", maintainAspectRatio);
+    isAllResourceLoaded() {
+        if (this.loadedCount == this.images.length + this.audios.length) {
+            return true;
+        }
+        return false;
+    }
+    checkAllResourcesLoaded(handleLoaded) {
+        this.images.forEach((imageSrc) => {
+            const image = new Image();
+            image.src = imageSrc;
+            image.onload = () => {
+                this.updateProcess();
+                if (this.isAllResourceLoaded()) {
+                    setTimeout(() => {
+                        handleLoaded();
+                    }, 500);
+                }
+            };
+            image.onerror = () => {
+                alert("Có lỗi xảy ra trong quá trình tải hình ảnh");
+            };
+        });
+        this.audios.forEach((audioSrc) => {
+            const audio = new Audio(audioSrc);
+            audio.preload = "auto";
+            audio.addEventListener("canplaythrough", () => {
+                this.updateProcess();
+                if (this.isAllResourceLoaded()) {
+                    handleLoaded();
+                }
+            });
+            audio.onerror = () => {
+                alert("Có lỗi xảy ra trong quá trình tải âm thanh");
+            };
+        });
+    }
+}
+
+const viewPort = new Responsive();
+viewPort.listener();
+document.addEventListener("DOMContentLoaded", function () {
+    // document.body.requestFullscreen();
+    const loader = new Loader();
+    loader.showWithLoadingEffect();
+    const gameLoading = new Loading();
+    gameLoading.checkAllResourcesLoaded(() => {
+        document.querySelector(".loading").classList.add("hidden");
+        let game = new Game();
+        game.init();
+        loader.showWithRotateEffect();
+    });
 });

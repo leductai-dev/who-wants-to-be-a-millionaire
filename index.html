@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ai là triệu phú</title>
-    <link rel="stylesheet" href="./light-effect.css" as="style">
+    <link rel="stylesheet" href="./lights.css" as="style">
     <link rel="stylesheet" href="./css.css" as="style">
     <script src="./constant.js" defer></script>
     <script src="./script.js" defer></script>
@@ -23,57 +23,35 @@
                     </div>
                 </div>
             </div>
-            <div class="lights">
-                <div class="light-effect blur ">
-                    <div class="lights-bulb">
-                        <div class="light-bulb">
+            <div class="lights hidden">
+                <div class="light ">
+                    <div class="light-sockets">
+                        <div class="light-socket">
                         </div>
-                        <div class="light-bulb">
+                        <div class="light-socket">
                         </div>
                     </div>
-                    <div class="stage-lights">
-                        <div class="light">
+                    <div class="lights-brightness">
+                        <div class="light-brightness">
                             <div class="brightness ">
                                 <span>&#9650;</span>
                             </div>
                         </div>
-                
-                        <div class="light">
+
+                        <div class="light-brightness">
                             <div class="brightness ">
                                 <span>&#9650;</span>
                             </div>
                         </div>
                     </div>
-                    <div class="fake-lights">
-                        <div class="fake-light"></div>
-                        <div class="fake-light"></div>
+                    <div class="lighting-positions">
+                        <div class="lighting-position"></div>
+                        <div class="lighting-position"></div>
                     </div>
+                    <img class='nen' src='./Image/background-cut.jpg' alt=''>
+
                 </div>
-                <div class="light-effect blur ">
-                    <div class="lights-bulb">
-                        <div class="light-bulb">
-                        </div>
-                        <div class="light-bulb">
-                        </div>
-                    </div>
-                    <div class="stage-lights">
-                        <div class="light">
-                            <div class="brightness ">
-                                <span>&#9650;</span>
-                            </div>
-                        </div>
                 
-                        <div class="light">
-                            <div class="brightness ">
-                                <span>&#9650;</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="fake-lights">
-                        <div class="fake-light"></div>
-                        <div class="fake-light"></div>
-                    </div>
-                </div>
             </div>
             <div class="popup translate-middle">
                 <div class="content">
@@ -102,7 +80,7 @@
                         <img class='' src='Image/50-50.webp' alt=''>
                     </button>
                     <button id="btn-advisory-help" class="btn-helper">
-                        <img class='' src='Image/grop.webp' alt=''>
+                        <img class='' src='Image/advisory-group.webp' alt=''>
                     </button>
                     <button id="btn-audience-help" class="btn-helper">
                         <img class='' src='Image/ask-viewer.webp' alt=''>
@@ -228,6 +206,50 @@
                     </div>
                 </div>
             </div>
+            <div class="advisory-group">
+                <div class="person">
+                    <button>
+                        <img class='avatar' src='./Image/avatar.jpg' alt=''>
+                    </button>
+                    <div class="person-answer">
+                        A
+                    </div>
+                </div>
+                <div class="person">
+                    <button>
+                        <img class='avatar' src='./Image/avatar.jpg' alt=''>
+                    </button>
+                    <div class="person-answer">
+                        A
+                    </div>
+                </div>
+                <div class="person">
+                    <button>
+                        <img class='avatar' src='./Image/avatar.jpg' alt=''>
+                    </button>
+                    <div class="person-answer">
+                        A
+                    </div>
+                </div>
+                <div class="person">
+                    <button>
+                        <img class='avatar' src='./Image/avatar.jpg' alt=''>
+                    </button>
+                    <div class="person-answer">
+                        A
+                    </div>
+                </div>
+                <div class="person">
+                    <button>
+                        <img class='avatar' src='./Image/avatar.jpg' alt=''>
+                    </button>
+                    <div class="person-answer">
+                        A
+                    </div>
+                </div>
+            </div>
+            <canvas id="canvas"></canvas>
+       
             <div class="current-prize-money hidden">
                 <div class="container">
                     <img class='' src='Image/current-money.png' alt=''>

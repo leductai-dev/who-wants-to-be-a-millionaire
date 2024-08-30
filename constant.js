@@ -8,29 +8,30 @@ const _script = {
         } câu hỏi của chương trình. Bạn sẽ ra về với tấm set trị giá 1.000.000$ đồng. Chúc bạn luôn may mắn trong cuộc sống!`;
     },
     playAgain: `- Chơi lại?`,
+    advisoryGroupHelper: `- Tổ tư vấn gồm có tất cả 5 người. Trong đó có 3 người biết chắc chắn câu lời đúng và 2 người còn lại thì không. Hãy chọn 3 người bất kì để được họ trợ giúp. Chúc bạn may mắn!`
 };
-const QandA = {
+const Questions = {
     1: {
         question: 'Câu 1: Có câu thành ngữ: "Đầu voi đuôi ..." gì? ',
         answers: [
             {
                 text: "A: Cá đuối",
-                id: "1",
+                id: 1
             },
             {
                 text: "B: Gà mái",
-                id: "2",
+                id:2,
             },
             {
                 text: "C: Chuột.",
-                id: "3",
+                id: 3,
             },
             {
                 text: "D: Chuồn chuồn",
-                id: "4",
+                id: 4,
             },
         ],
-        correctID: 3,
+        correctId: 3,
         sound: "Sound/question-sound/qs1.mp3",
     },
     2: {
@@ -38,22 +39,22 @@ const QandA = {
         answers: [
             {
                 text: "A: Nam Định",
-                id: "1",
+                id: 1
             },
             {
                 text: "B: Ninh Bình",
-                id: "2",
+                id:2,
             },
             {
                 text: "C: Bắc Ninh ",
-                id: "3",
+                id: 3,
             },
             {
                 text: "D: Bình Dương.",
-                id: "4",
+                id: 4,
             },
         ],
-        correctID: 2,
+        correctId: 2,
         sound: "Sound/question-sound/qs2.mp3",
     },
     3: {
@@ -61,22 +62,22 @@ const QandA = {
         answers: [
             {
                 text: "A: Nam Định",
-                id: "1",
+                id: 1
             },
             {
                 text: "B: Ninh Bình",
-                id: "2",
+                id:2,
             },
             {
                 text: "C: Bắc Ninh ",
-                id: "3",
+                id: 3,
             },
             {
                 text: "D: Bình Dương.",
-                id: "4",
+                id: 4,
             },
         ],
-        correctID: 3,
+        correctId: 3,
         sound: "Sound/question-sound/qs3.mp3",
     },
     4: {
@@ -84,22 +85,22 @@ const QandA = {
         answers: [
             {
                 text: "A: Nam Định",
-                id: "1",
+                id: 1
             },
             {
                 text: "B: Ninh Bình",
-                id: "2",
+                id:2,
             },
             {
                 text: "C: Bắc Ninh ",
-                id: "3",
+                id: 3,
             },
             {
                 text: "D: Bình Dương.",
-                id: "4",
+                id: 4,
             },
         ],
-        correctID: 4,
+        correctId: 4,
         sound: "Sound/question-sound/qs4.mp3",
     },
     5: {
@@ -107,22 +108,22 @@ const QandA = {
         answers: [
             {
                 text: "A: Nam Định",
-                id: "1",
+                id: 1
             },
             {
                 text: "B: Ninh Bình",
-                id: "2",
+                id:2,
             },
             {
                 text: "C: Bắc Ninh ",
-                id: "3",
+                id: 3,
             },
             {
                 text: "D: Bình Dương.",
-                id: "4",
+                id: 4,
             },
         ],
-        correctID: 1,
+        correctId: 1,
         sound: "Sound/question-sound/qs5.mp3",
     },
     6: {
@@ -130,22 +131,22 @@ const QandA = {
         answers: [
             {
                 text: "A: Nam Định",
-                id: "1",
+                id: 1
             },
             {
                 text: "B: Ninh Bình",
-                id: "2",
+                id:2,
             },
             {
                 text: "C: Bắc Ninh ",
-                id: "3",
+                id: 3,
             },
             {
                 text: "D: Bình Dương.",
-                id: "4",
+                id: 4,
             },
         ],
-        correctID: 2,
+        correctId: 2,
         sound: "Sound/question-sound/qs6.mp3",
     },
     7: {
@@ -153,22 +154,22 @@ const QandA = {
         answers: [
             {
                 text: "A: Nam Định",
-                id: "1",
+                id: 1
             },
             {
                 text: "B: Ninh Bình",
-                id: "2",
+                id:2,
             },
             {
                 text: "C: Bắc Ninh ",
-                id: "3",
+                id: 3,
             },
             {
                 text: "D: Bình Dương.",
-                id: "4",
+                id: 4,
             },
         ],
-        correctID: 3,
+        correctId: 3,
         sound: "Sound/question-sound/qs7.mp3",
     },
     8: {
@@ -176,22 +177,22 @@ const QandA = {
         answers: [
             {
                 text: "A: Nam Định",
-                id: "1",
+                id: 1
             },
             {
                 text: "B: Ninh Bình",
-                id: "2",
+                id:2,
             },
             {
                 text: "C: Bắc Ninh ",
-                id: "3",
+                id: 3,
             },
             {
                 text: "D: Bình Dương.",
-                id: "4",
+                id: 4,
             },
         ],
-        correctID: 4,
+        correctId: 4,
         sound: "Sound/question-sound/qs7.mp3",
     },
     9: {
@@ -199,22 +200,22 @@ const QandA = {
         answers: [
             {
                 text: "A: Nam Định",
-                id: "1",
+                id: 1
             },
             {
                 text: "B: Ninh Bình",
-                id: "2",
+                id:2,
             },
             {
                 text: "C: Bắc Ninh ",
-                id: "3",
+                id: 3,
             },
             {
                 text: "D: Bình Dương.",
-                id: "4",
+                id: 4,
             },
         ],
-        correctID: 1,
+        correctId: 1,
         sound: "Sound/question-sound/qs7.mp3",
     },
     10: {
@@ -222,22 +223,22 @@ const QandA = {
         answers: [
             {
                 text: "A: Nam Định",
-                id: "1",
+                id: 1
             },
             {
                 text: "B: Ninh Bình",
-                id: "2",
+                id:2,
             },
             {
                 text: "C: Bắc Ninh ",
-                id: "3",
+                id: 3,
             },
             {
                 text: "D: Bình Dương.",
-                id: "4",
+                id: 4,
             },
         ],
-        correctID: 2,
+        correctId: 2,
         sound: "Sound/question-sound/qs7.mp3",
     },
     11: {
@@ -245,22 +246,22 @@ const QandA = {
         answers: [
             {
                 text: "A: Nam Định",
-                id: "1",
+                id: 1
             },
             {
                 text: "B: Ninh Bình",
-                id: "2",
+                id:2,
             },
             {
                 text: "C: Bắc Ninh ",
-                id: "3",
+                id: 3,
             },
             {
                 text: "D: Bình Dương.",
-                id: "4",
+                id: 4,
             },
         ],
-        correctID: 3,
+        correctId: 3,
         sound: "Sound/question-sound/qs7.mp3",
     },
     12: {
@@ -268,33 +269,69 @@ const QandA = {
         answers: [
             {
                 text: "A: Nam Định",
-                id: "1",
+                id: 1
             },
             {
                 text: "B: Ninh Bình",
-                id: "2",
+                id:2,
             },
             {
                 text: "C: Bắc Ninh ",
-                id: "3",
+                id: 3,
             },
             {
                 text: "D: Bình Dương.",
-                id: "4",
+                id: 4,
             },
         ],
-        correctID: 4,
+        correctId: 4,
         sound: "Sound/question-sound/qs7.mp3",
     },
 };
 const resource = {
-    images: [],
+    images: [
+        "./Image/50-50-used.webp",
+        "./Image/50-50.webp",
+        "./Image/advisory-group-used.webp",
+        "./Image/advisory-group.webp",
+        "./Image/answer-table.webp",
+        "./Image/ask-viewer-used.webp",
+        "./Image/avatar.jpg",
+        "./Image/call-used.webp",
+        "./Image/normal-l.png",
+        "./Image/normal-r.png",
+        "./Image/selected-r.png",
+        "./Image/selected.png",
+        "./Image/correct.png",
+        "./Image/correct-r.png",
+        "./Image/question.png",
+        "./Image/point-table.webp",
+        "./Image/current-money.png",
+        "./Image/cartoon.png",
+        "./Image/guide-background.webp",
+        "./Image/call.webp",
+        "./Image/call-used.webp",
+        "./Image/ask-viewer.webp",
+        "./Image/money-point.png",
+    ],
     audios: [
-        "Sound/first5BgSound.mp3",
-        "Sound/final-answer.mp3",
-        "Sound/start-sound.mp3",
-        "Sound/game-over.mp3",
-        "Sound/start-game.mp3",
-        `Sound/wrong-sound.mp3`,
+        "./Sound/start-sound.mp3",
+        "./Sound/explain-rule-bg-sound.mp3",
+        "./Sound/explain-rule.mp3",
+        "./Sound/start-game.mp3",
+        "./Sound/first5BgSound.mp3",
+        "./Sound/final-answer.mp3",
+        "./Sound/game-over.mp3",
+        "./Sound/wrong-sound.mp3",
+        "./Sound/ask-advisory-group-bg-sound.mp3",
+        "./Sound/ask-advisory-group-done.mp3",
+        "./Sound/ask-advisory-group.mp3",
+        "./Sound/ask-viewer-sound.mp3",
+        "./Sound/introduce-part2.mp3",
+        "./Sound/next5BgSound.mp3",
+        "./Sound/remove-wrong.mp3",
+        "./Sound/win-5.mp3",
+        "./Sound/wait-viewer-answer.mp3",
+        "./Sound/time-up.mp3",
     ],
 };
