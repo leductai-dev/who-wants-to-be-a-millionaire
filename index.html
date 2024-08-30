@@ -17,11 +17,11 @@
     <div id="game" class="screen play-screen">
         <div class="game">
             <div class="loading">
-                <div class="loading-bar">
+                <!-- <div class="loading-bar">
                     <div class="bar">
                         <span class="process-bar"></span>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="lights hidden">
                 <div class="light ">
@@ -51,7 +51,7 @@
                     <img class='nen' src='./Image/background-cut.jpg' alt=''>
 
                 </div>
-                
+
             </div>
             <div class="popup translate-middle">
                 <div class="content">
@@ -59,11 +59,9 @@
                 <button class="btn-confirm ">Tiếp tục</button>
             </div>
             <button class="btn-start hidden">
-                Start Game
+                Bỏ qua
             </button>
-            <div class="timer hidden display">
-                <div class="time">60</div>
-            </div>
+            <div class="timer">30</div>
             <!-- <div class="game-header translate-header">
                                 <div class="side-header">
                                     Left
@@ -248,8 +246,8 @@
                     </div>
                 </div>
             </div>
-            <canvas id="canvas"></canvas>
-       
+            <canvas id="canvas" class="topView"></canvas>
+
             <div class="current-prize-money hidden">
                 <div class="container">
                     <img class='' src='Image/current-money.png' alt=''>

@@ -399,7 +399,7 @@ class Timer {
     constructor(game) {
         this.game = game;
         this.currentTime = TIME;
-        this.timerElement = document.querySelector(".time");
+        this.timerElement = document.querySelector(".timer");
         this.timerInterval = null;
     }
     updateTime() {
@@ -527,7 +527,7 @@ class Loader {
         }, 100);
     }
 }
-const TIME = 60;
+const TIME = 30;
 class Game {
     constructor() {
         this.questionNumber = 1;
@@ -569,6 +569,11 @@ class Game {
 
         this.isSelectedAnswer = false;
         this.startSound.start();
+        this.startSound.onEnd(()=>{
+            this.screen.showLights()
+            this.screen.hideStartBtn()
+            this.handleStartGame()
+        })
         this.screen.showLights(10000000, "2s");
         this.delay(() => this.screen.updateLightsEffectTiming("4s"), 12000);
         this.screen.showStartBtn();
@@ -708,9 +713,9 @@ class Game {
     readQuestion() {
         this.questionSound = new Sound(this.question.sound);
         this.questionSound.start();
-        this.timer.updateTime();
-        // this.questionSound.onEnd(() => {
-        // });
+        this.questionSound.onEnd(() => {
+            this.timer.updateTime();
+        });
         this.questionBgSound.isStopped() && this.questionBgSound.start(true);
     }
     handleBtnRemoveAnswerClick() {
@@ -840,16 +845,13 @@ class Game {
         // update sự kiện tiếp theo
     }
 
-    handleStartGameClick() {
+    handleStartGame() {
         this.startSound.stop();
-        setTimeout(() => {
-            if (!this.isPlayAgain) {
-                this.showGuidePopup();
-                return;
-            }
-            this.startGameSound.stop();
-            this.startGame();
-        }, 100);
+       if (!this.isPlayAgain) {
+           this.showGuidePopup();
+           return;
+       }
+       this.startGame();
     }
     handleBtnAskAdvisoryClick() {
         this.advisoryGroupHelper.updateAnswerData(this.question.correctId);
@@ -874,7 +876,7 @@ class Game {
             this.handleBtnAskAdvisoryClick();
         });
         this.screen.onBtnStartGameClick(() => {
-            this.handleStartGameClick();
+            this.handleStartGame();
         });
     }
 }
@@ -912,10 +914,10 @@ class Loading {
     }
     updateProcess() {
         this.loadedCount += 1;
-        let sum = this.images.length + this.audios.length;
-        const percent = (this.loadedCount / sum) * 100;
-        const processBar = document.querySelector(".process-bar");
-        processBar.style.width = `${percent}%`;
+        // let sum = this.images.length + this.audios.length;
+        // const percent = (this.loadedCount / sum) * 100;
+        // const processBar = document.querySelector(".process-bar");
+        // processBar.style.width = `${percent}%`;
     }
 
     isAllResourceLoaded() {
@@ -925,15 +927,24 @@ class Loading {
         return false;
     }
     checkAllResourcesLoaded(handleLoaded) {
+        // const loadingTime = 0;
+        // setInterval(() => {
+        //     loadingTime += 1;
+        // }, 1000);
+        // const _handleLoaded = () => {
+        //     if (loadingTime >= 3) {
+        //         handleLoaded();
+        //         return;
+        //     }
+        //     setTimeout(() => handleLoaded(), 2000);
+        // };
         this.images.forEach((imageSrc) => {
             const image = new Image();
             image.src = imageSrc;
             image.onload = () => {
                 this.updateProcess();
                 if (this.isAllResourceLoaded()) {
-                    setTimeout(() => {
-                        handleLoaded();
-                    }, 500);
+                    handleLoaded();
                 }
             };
             image.onerror = () => {
@@ -964,7 +975,10 @@ document.addEventListener("DOMContentLoaded", function () {
     loader.showWithLoadingEffect();
     const gameLoading = new Loading();
     gameLoading.checkAllResourcesLoaded(() => {
+        alert('Nhắc nhở: Bật âm thanh để có trải nghiệm tốt hơn!')
         document.querySelector(".loading").classList.add("hidden");
+        document.querySelector("#canvas").classList.remove("topView");
+
         let game = new Game();
         game.init();
         loader.showWithRotateEffect();
