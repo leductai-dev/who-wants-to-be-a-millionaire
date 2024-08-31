@@ -32,7 +32,7 @@ body {
 }
 
 .btn-start {
-   position: absolute;
+    position: absolute;
     bottom: 8%;
     right: 3%;
     padding: 0.5% 2%;
@@ -45,7 +45,6 @@ body {
     z-index: 100;
     box-shadow: 2px 2px 3px 2px rgba(0, 0, 0, 0.5);
     background-color: transparent;
-    font-family: cursive;
     overflow: hidden;
 }
 .btn-start::before {
@@ -99,16 +98,6 @@ body {
     z-index: 0;
 }
 
-.game-header {
-    position: absolute;
-    top: 0px;
-    height: 70px;
-    text-align: center;
-    display: flex;
-    background-image: linear-gradient(to top, #5e50e567 0%, #000000 100%);
-    width: 100%;
-    transition: all 0.3s linear;
-}
 
 .header-bar {
     display: flex;
@@ -147,27 +136,13 @@ body {
     width: 11%;
     aspect-ratio: 100 / 45;
     text-align: center;
-    border-radius: 0.2em;
-    transform: translateX(-50%) perspective(500px) rotateX(-12deg);
+    border-radius: 0.1em;
+    transform: translateX(-50%) perspective(500px) rotateX(-7deg);
     transform-origin: top center;
-    background: linear-gradient(to top, #2f211d 0%, #2d1f1a 100%);
-    box-shadow: 0px 0px 0px 5px #000000a3;
-    font-family: cursive;
+    background-image: linear-gradient(to top, #d6ac9c 0%, #d7c9c3 100%);
+    box-shadow: 0px 0px 0px 0.08em #000000a3;
     z-index: -1;
     line-height: 2;
-}
-.timer::before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, #979fc1 0%, #315fe3 100%);
-    border-radius: 0.18em;
-    z-index: -1;
 }
 
 .question {
@@ -202,7 +177,7 @@ body {
 .answer > span {
     position: absolute;
     left: 8%;
-    top: 45%;
+    top: 51%;
     transform: translateY(-50%);
 }
 .answer:hover {
@@ -224,13 +199,14 @@ body {
 }
 
 .table {
-    background: url(Image/point-table.webp);
+    background: linear-gradient(rgb(0 0 0 / 9%), rgb(0 0 0)), url(Image/point-table.webp);
     background-size: cover;
     background-position: -113px 103px;
     border: 2px solid #858289;
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5);
-    border-radius: 17px;
+    border-radius: 1.2em;
     padding: 5%;
+    background-position: 80%;
 }
 
 .point-item {
@@ -238,7 +214,6 @@ body {
     border-bottom: 1px solid rgb(165 164 164 / 39%);
     color: var(--primary-color);
     padding: 2% 3%;
-    font-family: cursive;
 }
 .point-item:nth-last-child(5n) {
     color: white;
@@ -266,17 +241,17 @@ body {
 
 .helper {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     margin-bottom: 5px;
-    padding: 0px 10px;
+    padding: 0% 2%;
 }
 
 .selected {
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
 }
 
 .correctAnswer {
-    color: var(--primary-color);
+    color: var(--primary-color) !important;
 }
 
 .btn-helper {
@@ -285,7 +260,7 @@ body {
     background: none;
     cursor: pointer;
     transition: all 0.3s linear;
-    width: 25%;
+    width: 24%;
 }
 .btn-helper > img {
     width: 85%;
@@ -314,7 +289,7 @@ body {
     transition: all 0.5s linear;
     align-items: stretch;
     padding: 1.5% 4px 3% 5px;
-    border-radius: 20px;
+    border-radius: 1.1em;
     overflow: hidden;
 }
 
@@ -336,20 +311,19 @@ body {
     color: var(--primary-color);
     font-weight: bold;
     font-size: 100%;
-    font-family: cursive;
 }
 
 .result {
-    background-color: #40bddd;
+    background-color: #3cc3db;
     width: 100%;
-    height: 10px;
+    height: 3.5%;
     margin-top: auto;
     position: relative;
-    box-shadow: inset 7px 10px 17px rgba(0, 0, 0, 0.5);
+    box-shadow: inset 3px 2px 12px 2px rgba(0, 0, 0, 0.5);
     color: white;
     font-weight: bold;
     font-family: monospace;
-    transition: all 1.5s linear;
+    transition: all 0.8s linear;
 }
 
 .result-animation {
@@ -374,15 +348,15 @@ body {
 
 @keyframes colAnimation {
     0% {
-        height: 20px;
+        height: 3.5%;
     }
 
     50% {
-        height: 400px;
+        height: 85%;
     }
 
     100% {
-        height: 20px;
+        height: 3.5%;
     }
 }
 
@@ -393,20 +367,13 @@ body {
     top: 0;
     width: 100%;
     aspect-ratio: 1 / 1;
-    background-color: #4f77fe;
+    background-color: #0c4791;
     border-radius: 50%;
     transform: translateY(-50%) scaleY(0.4);
-    box-shadow: inset 0px -7px 16px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: inset -1px 5px 13px 1px rgba(0, 0, 0, 0.5);
     transform-origin: center;
 }
 
-/* .hidden {
-            visibility: hidden;
-        } */
-
-.translate-header {
-    transform: translateY(10px);
-}
 
 .prize-money.hidden {
     right: -18%;
@@ -483,7 +450,7 @@ body {
     margin-top: 1.5%;
     margin-left: auto;
     font-weight: bold;
-    border-radius: 0.7em;
+    border-radius: 0.5em;
     border: none;
     outline: none;
     cursor: pointer;
@@ -552,26 +519,27 @@ body {
 }
 
 .current-prize-money {
-    position: absolute;
+   position: absolute;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     width: auto;
     height: auto;
     transition: all 0s ease-in;
+    bottom: 11%;
+    width: 30%;
 }
 
 .current-prize-money > .container {
     position: relative;
 }
 
-.current-prize-money > .container > image {
-    position: relative;
+.current-prize-money > .container > img {
+    width: 100%;
 }
 
 .current-prize-money > .container > span {
-    position: absolute;
-    top: 50%;
+  position: absolute;
+    top: 44%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: var(--primary-color);
@@ -689,40 +657,45 @@ body {
     display: flex;
     flex-direction: row;
     height: 17%;
-    padding: 4%;
+    padding: 0.5em;
     background: none;
-    border-radius: 10px;
+    border-radius: 0.5em;
     overflow: hidden;
-    transition: all 0.4s linear;
+    transition: all 0.3s linear;
     align-items: center;
+    width: auto;
+
 }
 .advisory-group .person.show {
     background: url("./Image/guide-background.webp");
-    box-shadow: -1px 0px 3px 4px rgb(0 0 0 / 57%) inset;
+    background-size: cover;
+    background-position: 2em;
 }
 .advisory-group .person button {
     border: none;
     outline: none;
     cursor: pointer;
-    height: 94%;
+    height: 100%;
+    flex-shrink: 0;
     aspect-ratio: 1 / 1;
     border-radius: 10%;
     overflow: hidden;
 }
 .advisory-group .person .person-answer {
-    text-align: center;
+     text-align: center;
     font-size: 3em;
     line-height: 1.2;
-    height: 0;
-    aspect-ratio: 2 / 1;
+    height: 100%;
     color: white;
     visibility: hidden;
-    transition: all 0.4s linear;
+    transition: all 0.3s linear;
+    width: 0;
+
 }
 .advisory-group .person.show .person-answer {
-    height: 94%;
-    min-height: 94%;
     visibility: visible;
+    width: 3em;
+    flex-grow: 1;
 }
 .advisory-group .person img {
     width: 100%;
@@ -751,25 +724,61 @@ body {
 }
 
 @media screen and (max-width: 1023px) {
-    /* * {
+    * {
         font-family: Arial, sans-serif;
-    } */
+    }
+    .brightness > span {
+        font-family: cursive, sans-serif;
+    }
     .popup {
         width: 60%;
     }
     .prize-money {
-        width: 20% !important;
-        font-weight: 500;
+        right: 1%;
+        width: 21%;
     }
     .game-qa {
-        width: 45%;
+        width: 55%;
+        font-size: 140%;
+    }
+    .question {
+        font-weight: 500;
+    }
+    .answer {
+        font-weight: 400;
     }
     .table-viewer-answer {
-        width: 24%;
+        width: 23%;
         font-size: 120%;
+        left: 1%;
     }
     .popup > .content {
         font-size: 170%;
         font-weight: 300;
+    }
+    .popup > .btn-confirm {
+        box-shadow: none;
+        font-size: 170%;
+        font-weight: 500;
+    }
+    .table {
+        border: 1px solid #858289;
+    }
+    .btn-start {
+        position: absolute;
+        bottom: 8%;
+        right: 3%;
+        padding: 1.2% 2.4%;
+        border-radius: 10em;
+        font-size: 150%;
+        box-shadow: 2px 2px 3px 2px rgba(0, 0, 0, 0.5);
+    }
+}
+@media (hover: none) and (pointer: coarse) {
+    .btn-confirm:hover {
+        color: white;
+    }
+    .answer:hover {
+        color: white;
     }
 }

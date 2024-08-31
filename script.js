@@ -242,15 +242,31 @@ class Screen {
         const lights = document.querySelector(".lights");
         lights.classList.add("rotate");
         lights.classList.remove("hidden", "blur");
-        setTimeout(() => this.hideLights(), timing);
+        setTimeout(() => {
+            this.hideLights();
+        }, timing - 2000);
     }
     hideLights() {
         const lights = document.querySelector(".lights");
-        if (lights.classList.contains("blur")) return;
         lights.classList.add("blur");
-        this.game.delay(() => {
+        setTimeout(() => {
             lights.classList.remove("rotate");
-        }, 3200);
+        }, 3000);
+    }
+    renderPrizeMoney() {
+        const table = document.querySelector(".table");
+        const render = () => {
+            let data = "";
+            for (let i = 15; i > 0; i--) {
+                const item = ` <div class="point-item">
+             <div class="lever">${i}</div>
+             <div class="money">${PrizeMoney[i]}</div>
+            </div>`;
+                data += item;
+            }
+            return data;
+        };
+        table.innerHTML = render();
     }
     updateLightsEffectTiming(timing) {
         document.documentElement.style.setProperty("--animation-timing", timing);
@@ -394,6 +410,11 @@ class Dot {
     updatePosition() {
         this.angle += 0.02;
     }
+    updateSizeRadius(size, radius) {
+        console.log("new Size" + size, radius);
+        this.size = size;
+        this.radius = radius;
+    }
 }
 class Timer {
     constructor(game) {
@@ -446,22 +467,12 @@ class Loader {
         this.ctx = canvas.getContext("2d");
     }
 
-    drawTimer() {
-        this.ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // this.ctx.strokeStyle = "black";
-        // this.ctx.lineWidth = 2;
-        this.ctx.beginPath();
-        this.ctx.arc(canvas.width / 2, canvas.height / 2, canvas.width / 2, 0, Math.PI * 2, false);
-        // this.ctx.fill();
-        // this.ctx.stroke();
-        this.ctx.closePath();
-        this.ctx.textAlign = "center";
-        this.ctx.textBaseline = "middle";
-        this.ctx.font = `${canvas.width * 0.3}px Arial`;
-        this.ctx.fillStyle = "white";
-        this.ctx.fillText(this.currentTime, canvas.width / 2, canvas.height / 2);
-        this.loadingInterval = null;
-        this.drawDots();
+    updateDots() {
+        this.dots.forEach((dot) => {
+            const dotSize = canvas.offsetWidth * 0.025;
+            const radius = (canvas.offsetWidth - canvas.offsetWidth * 0.1) / 2;
+            dot.updateSizeRadius(dotSize, radius);
+        });
     }
 
     createDots(effect) {
@@ -501,24 +512,22 @@ class Loader {
     showWithRotateEffect() {
         clearInterval(this.loadingInterval);
         this.createDots(false);
-        this.rotate();
+        this.rotateEffect();
     }
-    rotate() {
-        this.ctx.clearRect(0, 0, canvas.width, canvas.height);
-        this.drawImage();
+    rotateEffect() {
         this.dots.forEach((dot) => {
             dot.updatePosition();
-            dot.draw();
         });
-        this.rotateAnimation = requestAnimationFrame(() => this.rotate());
+        this.draw();
+        this.rotateAnimation = requestAnimationFrame(() => this.rotateEffect());
     }
 
     showWithLoadingEffect() {
         cancelAnimationFrame(this.rotateAnimation);
         this.createDots(true);
-        this.loading();
+        this.loadingEffect();
     }
-    loading() {
+    loadingEffect() {
         this.loadingInterval = setInterval(() => {
             this.dots.forEach((dot) => {
                 dot.updateOpacity();
@@ -541,7 +550,6 @@ class Game {
         this.popup = new Popup("");
         this.helpers = null;
         this.question = null;
-        this.questionBgSound = new Sound("Sound/first5BgSound.mp3");
         this.finalAnswerSound = new Sound("Sound/final-answer.mp3");
         this.startSound = new Sound("Sound/start-sound.mp3");
         this.gameOverSound = new Sound("Sound/game-over.mp3");
@@ -557,8 +565,9 @@ class Game {
         this.ctx = null;
     }
     init() {
+        this.questionBgSound = new Sound("Sound/first5BgSound.mp3");
         this.questionNumber = 1;
-        this.question = Questions[this.questionNumber];
+        this.question = Questions[this.questionNumber][0];
         this.questionSound = new Sound(this.question.sound);
         this.helpers = {
             isRemoveWrongUsed: false,
@@ -566,14 +575,14 @@ class Game {
             isCallUsed: false,
             isAdvisoryUsed: false,
         };
-
+        this.screen.renderPrizeMoney();
         this.isSelectedAnswer = false;
         this.startSound.start();
-        this.startSound.onEnd(()=>{
-            this.screen.showLights()
-            this.screen.hideStartBtn()
-            this.handleStartGame()
-        })
+        this.startSound.onEnd(() => {
+            this.screen.hideLights();
+            this.screen.hideStartBtn();
+            this.handleStartGame();
+        });
         this.screen.showLights(10000000, "2s");
         this.delay(() => this.screen.updateLightsEffectTiming("4s"), 12000);
         this.screen.showStartBtn();
@@ -599,7 +608,9 @@ class Game {
                     element.classList.add("hidden");
                 });
                 this.screen.hideAnswerTable();
+                this.advisoryGroupHelper.hideHelperList();
                 const prizeMoney = document.querySelector(".current-prize-money");
+                document.querySelector(".current-prize-money span").innerText = PrizeMoney[this.questionNumber];
                 prizeMoney.classList.remove("hidden");
                 const winFirst5Sound = new Sound("Sound/win-5.mp3");
                 const introducePart2 = new Sound("Sound/introduce-part2.mp3");
@@ -667,7 +678,7 @@ class Game {
 
     updateQuestion() {
         this.questionNumber += 1;
-        this.question = Questions[this.questionNumber];
+        this.question = Questions[this.questionNumber][0];
         this.screen.hideAnswerTable();
         this.advisoryGroupHelper.hideHelperList();
         this.isSelectedAnswer = false;
@@ -847,11 +858,11 @@ class Game {
 
     handleStartGame() {
         this.startSound.stop();
-       if (!this.isPlayAgain) {
-           this.showGuidePopup();
-           return;
-       }
-       this.startGame();
+        if (!this.isPlayAgain) {
+            this.showGuidePopup();
+            return;
+        }
+        this.startGame();
     }
     handleBtnAskAdvisoryClick() {
         this.advisoryGroupHelper.updateAnswerData(this.question.correctId);
@@ -883,11 +894,19 @@ class Game {
 class Responsive {
     constructor() {
         this.maintainAspectRatio();
-        this.listener();
+        this.init();
     }
-    listener() {
+    init() {
         window.addEventListener("resize", this.maintainAspectRatio);
         window.addEventListener("orientationchange", this.maintainAspectRatio);
+    }
+    listener(callbackFunc) {
+        window.addEventListener("resize", () => {
+            callbackFunc();
+        });
+        window.addEventListener("orientationchange", () => {
+            callbackFunc();
+        });
     }
     maintainAspectRatio() {
         const container = document.querySelector("#game");
@@ -906,7 +925,7 @@ class Responsive {
         container.style.fontSize = `${container.offsetWidth / 106}px`;
     }
 }
-class Loading {
+class LoadingChecker {
     constructor() {
         this.images = resource.images;
         this.audios = resource.audios;
@@ -966,21 +985,76 @@ class Loading {
         });
     }
 }
+class GameHelper {
+    constructor() {
+        this.viewPort = new Responsive();
+        this.loader = new Loader();
+        this.loadingChecker = new LoadingChecker();
+        this.init();
+    }
+    init() {
+        this.enableLandscapeFullscreen();
+        document.addEventListener("click", () => {
+            this.enableLandscapeFullscreen();
+        });
+        this.viewPort.listener(() => {
+            console.log("change");
+            this.loader.init();
+            this.loader.updateDots();
+        });
+    }
+    initGame() {
+        this.loader.showWithLoadingEffect();
+        this.loadingChecker.checkAllResourcesLoaded(() => {
+            document.querySelector(".loading").classList.add("hidden");
+            document.querySelector("#canvas").classList.remove("topView");
+            let game = new Game();
+            game.init();
+            this.loader.showWithRotateEffect();
+        });
+    }
+    enableLandscapeFullscreen() {
+        if (this.isMobileDevice()) {
+            this.rotateToLandscape();
+            this.openFullscreen();
+        }
+    }
+    isMobileDevice() {
+        return /Mobi|Android/i.test(window.navigator.userAgent);
+    }
 
-const viewPort = new Responsive();
-viewPort.listener();
+    // Xoay màn hình ngang (landscape mode)
+    rotateToLandscape() {
+        if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock("landscape").catch(function (error) {
+                console.error("Không thể xoay màn hình:", error);
+            });
+        } else if (screen.orientation && screen.orientation.type.includes("portrait")) {
+            screen.orientation.lock("landscape-primary").catch(function (error) {
+                console.error("Không thể xoay màn hình:", error);
+            });
+        }
+    }
+
+    // Mở chế độ toàn màn hình
+    openFullscreen() {
+        const docElm = document.documentElement;
+        if (docElm.requestFullscreen) {
+            docElm.requestFullscreen();
+        } else if (docElm.mozRequestFullScreen) {
+            // Firefox
+            docElm.mozRequestFullScreen();
+        } else if (docElm.webkitRequestFullscreen) {
+            // Chrome, Safari and Opera
+            docElm.webkitRequestFullscreen();
+        } else if (docElm.msRequestFullscreen) {
+            // IE/Edge
+            docElm.msRequestFullscreen();
+        }
+    }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-    // document.body.requestFullscreen();
-    const loader = new Loader();
-    loader.showWithLoadingEffect();
-    const gameLoading = new Loading();
-    gameLoading.checkAllResourcesLoaded(() => {
-        alert('Nhắc nhở: Bật âm thanh để có trải nghiệm tốt hơn!')
-        document.querySelector(".loading").classList.add("hidden");
-        document.querySelector("#canvas").classList.remove("topView");
-
-        let game = new Game();
-        game.init();
-        loader.showWithRotateEffect();
-    });
+    const gameHelper = new GameHelper();
+    gameHelper.initGame();
 });

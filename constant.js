@@ -8,285 +8,305 @@ const _script = {
         } câu hỏi của chương trình. Bạn sẽ ra về với tấm set trị giá 1.000.000$ đồng. Chúc bạn luôn may mắn trong cuộc sống!`;
     },
     playAgain: `- Chơi lại?`,
-    advisoryGroupHelper: `- Tổ tư vấn gồm có tất cả 5 người. Trong đó có 3 người biết chắc chắn câu lời đúng và 2 người còn lại thì không. Hãy chọn 3 người bất kì để được họ trợ giúp. Chúc bạn may mắn!`
+    advisoryGroupHelper: `- Tổ tư vấn gồm có tất cả 5 người. Trong đó có 3 người biết chắc chắn câu lời đúng và 2 người còn lại thì không. Hãy chọn 3 người bất kì để được họ trợ giúp. Chúc bạn may mắn!`,
 };
 const Questions = {
-    1: {
-        question: 'Câu 1: Có câu thành ngữ: "Đầu voi đuôi ..." gì? ',
+    1: [
+        {
+            question: 'Câu 1: Có câu thành ngữ: "Đầu voi đuôi ..." gì? ',
+            answers: [
+                {
+                    text: "A: Cá đuối",
+                    id: 1,
+                },
+                {
+                    text: "B: Gà mái",
+                    id: 2,
+                },
+                {
+                    text: "C: Chuột.",
+                    id: 3,
+                },
+                {
+                    text: "D: Chuồn chuồn",
+                    id: 4,
+                },
+            ],
+            correctId: 3,
+            sound: "Sound/question-sound/question-1/1.mp3",
+        },
+        {
+            question: "Câu 1: Từ nào sau đây chỉ tên một loại trái cây? ",
+            answers: [
+                {
+                    text: "A: Ểnh ương",
+                    id: 1,
+                },
+                {
+                    text: "B: Cóc",
+                    id: 2,
+                },
+                {
+                    text: "C: Nhái bén",
+                    id: 3,
+                },
+                {
+                    text: "D: Mòng",
+                    id: 4,
+                },
+            ],
+            correctId: 2,
+            sound: "Sound/question-sound/question-1/2.mp3",
+        },
+    ],
+    2: [
+        {
+            question: "Câu 2: Tỉnh nào ở miền Nam?",
+            answers: [
+                {
+                    text: "A: Nam Định",
+                    id: 1,
+                },
+                {
+                    text: "B: Ninh Bình",
+                    id: 2,
+                },
+                {
+                    text: "C: Bắc Ninh ",
+                    id: 3,
+                },
+                {
+                    text: "D: Bình Dương.",
+                    id: 4,
+                },
+            ],
+            correctId: 2,
+            sound: "Sound/question-sound/question-2/1.mp3",
+        },
+        {
+            question: "Câu 2: Đâu là tên một tập truyện nổi tiếng?",
+            answers: [
+                {
+                    text: "A: Nghìn lẻ một năm",
+                    id: 1,
+                },
+                {
+                    text: "B: Nghìn lẻ một tháng",
+                    id: 2,
+                },
+                {
+                    text: "C: Nghìn lẻ một tuần",
+                    id: 3,
+                },
+                {
+                    text: "D: Nghìn lẻ một đêm",
+                    id: 4,
+                },
+            ],
+            correctId: 4,
+            sound: "Sound/question-sound/question-2/2.mp3",
+        },
+    ],
+    3: [
+        {
+            question: "Câu 3: Theo cách làm truyền thống thì chiếu được dệt từ gì?",
+            answers: [
+                {
+                    text: "A: Tơ hồng",
+                    id: 1,
+                },
+                {
+                    text: "B: Dây gai",
+                    id: 2,
+                },
+                {
+                    text: "C: Rễ cây si",
+                    id: 3,
+                },
+                {
+                    text: "D: Cói",
+                    id: 4,
+                },
+            ],
+            correctId: 4,
+            sound: "Sound/question-sound/question-3/1.mp3",
+        },
+    ],
+    4: [
+         {
+        question: "Câu 4: Đâu là tên một ca khúc nổi tiếng của nhạc sĩ Đỗ Bảo?",
         answers: [
             {
-                text: "A: Cá đuối",
-                id: 1
+                text: "A: Giấy đòi nợ đầu tiên",
+                id: 1,
             },
             {
-                text: "B: Gà mái",
-                id:2,
+                text: "B: Lời thăm dò đầu tiên",
+                id: 2,
             },
             {
-                text: "C: Chuột.",
+                text: "C: Bức thư tình đầu tiên",
                 id: 3,
             },
             {
-                text: "D: Chuồn chuồn",
+                text: "D: Lần lừa dối đầu tiên",
                 id: 4,
             },
         ],
         correctId: 3,
-        sound: "Sound/question-sound/qs1.mp3",
+        sound: "Sound/question-sound/question-4/1.mp3",
     },
-    2: {
-        question: "Câu 2: Tỉnh nào ở miền Nam?",
-        answers: [
-            {
-                text: "A: Nam Định",
-                id: 1
-            },
-            {
-                text: "B: Ninh Bình",
-                id:2,
-            },
-            {
-                text: "C: Bắc Ninh ",
-                id: 3,
-            },
-            {
-                text: "D: Bình Dương.",
-                id: 4,
-            },
-        ],
-        correctId: 2,
-        sound: "Sound/question-sound/qs2.mp3",
-    },
-    3: {
-        question: "Câu 3: Tỉnh nào ở miền Nam?",
-        answers: [
-            {
-                text: "A: Nam Định",
-                id: 1
-            },
-            {
-                text: "B: Ninh Bình",
-                id:2,
-            },
-            {
-                text: "C: Bắc Ninh ",
-                id: 3,
-            },
-            {
-                text: "D: Bình Dương.",
-                id: 4,
-            },
-        ],
-        correctId: 3,
-        sound: "Sound/question-sound/qs3.mp3",
-    },
-    4: {
-        question: "Câu 4: Tỉnh nào ở miền Nam?",
-        answers: [
-            {
-                text: "A: Nam Định",
-                id: 1
-            },
-            {
-                text: "B: Ninh Bình",
-                id:2,
-            },
-            {
-                text: "C: Bắc Ninh ",
-                id: 3,
-            },
-            {
-                text: "D: Bình Dương.",
-                id: 4,
-            },
-        ],
-        correctId: 4,
-        sound: "Sound/question-sound/qs4.mp3",
-    },
-    5: {
-        question: "Câu 5: Tỉnh nào ở miền Nam?",
-        answers: [
-            {
-                text: "A: Nam Định",
-                id: 1
-            },
-            {
-                text: "B: Ninh Bình",
-                id:2,
-            },
-            {
-                text: "C: Bắc Ninh ",
-                id: 3,
-            },
-            {
-                text: "D: Bình Dương.",
-                id: 4,
-            },
-        ],
-        correctId: 1,
-        sound: "Sound/question-sound/qs5.mp3",
-    },
-    6: {
-        question: "Câu 6: Tỉnh nào ở miền Nam?",
-        answers: [
-            {
-                text: "A: Nam Định",
-                id: 1
-            },
-            {
-                text: "B: Ninh Bình",
-                id:2,
-            },
-            {
-                text: "C: Bắc Ninh ",
-                id: 3,
-            },
-            {
-                text: "D: Bình Dương.",
-                id: 4,
-            },
-        ],
-        correctId: 2,
-        sound: "Sound/question-sound/qs6.mp3",
-    },
-    7: {
-        question: "Câu 7: Tỉnh nào ở miền Nam?",
-        answers: [
-            {
-                text: "A: Nam Định",
-                id: 1
-            },
-            {
-                text: "B: Ninh Bình",
-                id:2,
-            },
-            {
-                text: "C: Bắc Ninh ",
-                id: 3,
-            },
-            {
-                text: "D: Bình Dương.",
-                id: 4,
-            },
-        ],
-        correctId: 3,
-        sound: "Sound/question-sound/qs7.mp3",
-    },
-    8: {
-        question: "Câu 8: Tỉnh nào ở miền Nam?",
-        answers: [
-            {
-                text: "A: Nam Định",
-                id: 1
-            },
-            {
-                text: "B: Ninh Bình",
-                id:2,
-            },
-            {
-                text: "C: Bắc Ninh ",
-                id: 3,
-            },
-            {
-                text: "D: Bình Dương.",
-                id: 4,
-            },
-        ],
-        correctId: 4,
-        sound: "Sound/question-sound/qs7.mp3",
-    },
-    9: {
-        question: "Câu 9: Tỉnh nào ở miền Nam?",
-        answers: [
-            {
-                text: "A: Nam Định",
-                id: 1
-            },
-            {
-                text: "B: Ninh Bình",
-                id:2,
-            },
-            {
-                text: "C: Bắc Ninh ",
-                id: 3,
-            },
-            {
-                text: "D: Bình Dương.",
-                id: 4,
-            },
-        ],
-        correctId: 1,
-        sound: "Sound/question-sound/qs7.mp3",
-    },
-    10: {
-        question: "Câu 10: Tỉnh nào ở miền Nam?",
-        answers: [
-            {
-                text: "A: Nam Định",
-                id: 1
-            },
-            {
-                text: "B: Ninh Bình",
-                id:2,
-            },
-            {
-                text: "C: Bắc Ninh ",
-                id: 3,
-            },
-            {
-                text: "D: Bình Dương.",
-                id: 4,
-            },
-        ],
-        correctId: 2,
-        sound: "Sound/question-sound/qs7.mp3",
-    },
-    11: {
-        question: "Câu 11: Tỉnh nào ở miền Nam?",
-        answers: [
-            {
-                text: "A: Nam Định",
-                id: 1
-            },
-            {
-                text: "B: Ninh Bình",
-                id:2,
-            },
-            {
-                text: "C: Bắc Ninh ",
-                id: 3,
-            },
-            {
-                text: "D: Bình Dương.",
-                id: 4,
-            },
-        ],
-        correctId: 3,
-        sound: "Sound/question-sound/qs7.mp3",
-    },
-    12: {
-        question: "Câu 12: Tỉnh nào ở miền Nam?",
-        answers: [
-            {
-                text: "A: Nam Định",
-                id: 1
-            },
-            {
-                text: "B: Ninh Bình",
-                id:2,
-            },
-            {
-                text: "C: Bắc Ninh ",
-                id: 3,
-            },
-            {
-                text: "D: Bình Dương.",
-                id: 4,
-            },
-        ],
-        correctId: 4,
-        sound: "Sound/question-sound/qs7.mp3",
-    },
+    ],
+    5: [
+        {
+            question: "Trong bảng tuần hoàn Mendeleev, nguyên tố hóa học Poloni được viết như thế nào?",
+            answers: [
+                {
+                    text: "A: K",
+                    id: 1,
+                },
+                {
+                    text: "B: NA",
+                    id: 2,
+                },
+                {
+                    text: "C: Ba",
+                    id: 3,
+                },
+                {
+                    text: "D: Po",
+                    id: 4,
+                },
+            ],
+            correctId: 4,
+            sound: "Sound/question-sound/question-5/1.mp3",
+        },
+    ],
+    6: [
+        {
+            question: "Câu 6: Biểu tượng của mạng xã hội Twitter là hình gì?",
+            answers: [
+                {
+                    text: "A: Con chim xanh",
+                    id: 1,
+                },
+                {
+                    text: "B: Máy ảnh",
+                    id: 2,
+                },
+                {
+                    text: "C: Hai hình tròn xanh và hồng",
+                    id: 3,
+                },
+                {
+                    text: "D: Cột sóng wifi",
+                    id: 4,
+                },
+            ],
+            correctId: 1,
+            sound: "Sound/question-sound/question-6/1.mp3",
+        },
+    ],
+    7: [
+        {
+            question: `Câu 7: Bài hát "Tàu anh qua núi" do nhạc sĩ nào sáng tác?`,
+            answers: [
+                {
+                    text: "A: Phạm Tuyên",
+                    id: 1,
+                },
+                {
+                    text: "B: Hoàng Việt",
+                    id: 2,
+                },
+                {
+                    text: "C: Phan Lạc Hoa",
+                    id: 3,
+                },
+                {
+                    text: "D: Đỗ Nhuận",
+                    id: 4,
+                },
+            ],
+            correctId: 3,
+            sound: "Sound/question-sound/question-7/1.mp3",
+        },
+    ],
+    8: [
+        {
+            question: "Câu 8: Lục địa nào là quê hương của những câu chuyện ngụ ngôn Timbuktu?",
+            answers: [
+                {
+                    text: "A: Châu Mỹ",
+                    id: 1,
+                },
+                {
+                    text: "B: Châu Phi",
+                    id: 2,
+                },
+                {
+                    text: "C: Châu Á",
+                    id: 3,
+                },
+                {
+                    text: "D: Châu Đại Dương",
+                    id: 4,
+                },
+            ],
+            correctId: 2,
+            sound: "Sound/question-sound/question-8/1.mp3",
+        },
+    ],
+    9: [
+        {
+            question: "Câu 9: Thành phố nào sau đây không nằm trong lãnh thổ nước Nga?",
+            answers: [
+                {
+                    text: "A: Smolensk",
+                    id: 1,
+                },
+                {
+                    text: "B: Kursk",
+                    id: 2,
+                },
+                {
+                    text: "C: Minsk",
+                    id: 3,
+                },
+                {
+                    text: "D: Khabarovsk",
+                    id: 4,
+                },
+            ],
+            correctId: 3,
+            sound: "Sound/question-sound/question-9/1.mp3",
+        },
+    ],
+    10: [
+        {
+            question: `Câu 10: Diễn viên nào đảm nhận vai "Tùng Hero" trong phim "Hương Ga"?`,
+            answers: [
+                {
+                    text: "A: Chi Bảo",
+                    id: 1,
+                },
+                {
+                    text: "B: Hà Việt Dũng",
+                    id: 2,
+                },
+                {
+                    text: "C: Harry Lu",
+                    id: 3,
+                },
+                {
+                    text: "D: Kim Lý",
+                    id: 4,
+                },
+            ],
+            correctId: 4,
+            sound: "Sound/question-sound/question-10/1.mp3",
+        },
+    ],
 };
 const resource = {
     images: [
@@ -334,4 +354,21 @@ const resource = {
         "./Sound/wait-viewer-answer.mp3",
         "./Sound/time-up.mp3",
     ],
+};
+const PrizeMoney = {
+    15: "150.000.000",
+    14: "85.000.000",
+    13: "60.000.000",
+    12: "40.000.000",
+    11: "30.000.000",
+    10: "22.000.000",
+    9: "14.000.000",
+    8: "10.000.000",
+    7: "6.000.000",
+    6: "3.000.000",
+    5: "2.000.000",
+    4: "1.000.000",
+    3: "600.000",
+    2: "400.000",
+    1: "200.000",
 };

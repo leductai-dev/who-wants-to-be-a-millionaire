@@ -22,10 +22,10 @@
 /* ------------------------------------ */
 
 .lights.rotate > .light .light-socket:first-child {
-    animation: light-socket-rotate-1 var(--animation-timing) linear infinite none;
+    animation: light-socket-rotate-1 var(--animation-timing) linear infinite forwards;
 }
 .lights.rotate > .light .light-socket:last-child {
-    animation: light-socket-rotate-2 var(--animation-timing) linear infinite none;
+    animation: light-socket-rotate-2 var(--animation-timing) linear infinite forwards;
 }
 
 /* ------------------------------------ */
@@ -104,28 +104,7 @@
     border-bottom-right-radius: 50%;
     z-index: 1;
 }
-@keyframes light-socket-rotate-1 {
-    0% {
-        transform: rotateZ(0deg);
-    }
-    50% {
-        transform: rotateZ(43deg);
-    }
-    100% {
-        transform: rotateZ(0deg);
-    }
-}
-@keyframes light-socket-rotate-2 {
-    0% {
-        transform: rotateZ(0deg);
-    }
-    50% {
-        transform: rotateZ(-43deg);
-    }
-    100% {
-        transform: rotateZ(0deg);
-    }
-}
+
 .nen {
     position: absolute;
     bottom: 0;
@@ -177,6 +156,28 @@
     filter: blur(1px);
     top: 71%;
     background-image: linear-gradient(to top, #00b3f8d6 0%, #03a5f22e 100%)
+}
+@keyframes light-socket-rotate-1 {
+    0% {
+        transform: rotateZ(0deg);
+    }
+    50% {
+        transform: rotateZ(43deg);
+    }
+    100% {
+        transform: rotateZ(0deg);
+    }
+}
+@keyframes light-socket-rotate-2 {
+    0% {
+        transform: rotateZ(0deg);
+    }
+    50% {
+        transform: rotateZ(-43deg);
+    }
+    100% {
+        transform: rotateZ(0deg);
+    }
 }
 @keyframes brightness-blur {
     0% {
