@@ -98,7 +98,6 @@ body {
     z-index: 0;
 }
 
-
 .header-bar {
     display: flex;
     width: 50%;
@@ -374,7 +373,6 @@ body {
     transform-origin: center;
 }
 
-
 .prize-money.hidden {
     right: -18%;
     visibility: hidden;
@@ -519,7 +517,7 @@ body {
 }
 
 .current-prize-money {
-   position: absolute;
+    position: absolute;
     left: 50%;
     transform: translateX(-50%);
     width: auto;
@@ -538,7 +536,7 @@ body {
 }
 
 .current-prize-money > .container > span {
-  position: absolute;
+    position: absolute;
     top: 44%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -664,7 +662,6 @@ body {
     transition: all 0.3s linear;
     align-items: center;
     width: auto;
-
 }
 .advisory-group .person.show {
     background: url("./Image/guide-background.webp");
@@ -682,7 +679,7 @@ body {
     overflow: hidden;
 }
 .advisory-group .person .person-answer {
-     text-align: center;
+    text-align: center;
     font-size: 3em;
     line-height: 1.2;
     height: 100%;
@@ -690,7 +687,6 @@ body {
     visibility: hidden;
     transition: all 0.3s linear;
     width: 0;
-
 }
 .advisory-group .person.show .person-answer {
     visibility: visible;
@@ -722,11 +718,51 @@ body {
 #canvas.topView {
     z-index: 1000;
 }
+.alert {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 5%;
+    height: 20%;
+    width: 22%;
+    padding: 1% 1.5%;
+    background: #fff;
+    border-radius: 0.8em;
+    display: flex;
+    font-size: 110%;
+    transition: all 0.3s ease-out ;
+}
+.alert.hidden{
+    visibility: hidden;
+    top: 0;
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+}
+.alert-content {
+    height: 70%;
+}
+#alert-btn {
+    float: right;
+    margin-top: 3%;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    font-weight: 500;
+    margin-top: auto;
+    background: transparent;
+    font-size: 100%;
+}
 
 @media screen and (max-width: 1023px) {
     * {
         font-family: Arial, sans-serif;
     }
+    .alert {
+    height: 25%;
+    width: 30%;
+    padding: 1.2% 2%;
+    font-size: 140%;
+}
     .brightness > span {
         font-family: cursive, sans-serif;
     }

@@ -410,6 +410,11 @@ class Dot {
     updatePosition() {
         this.angle += 0.02;
     }
+    updateColor() {
+         this.opacity = this.opacity - 1 / this.loader.numberOfDots;
+         if (this.opacity <= 0) this.opacity = 1;
+    }
+
     updateSizeRadius(size, radius) {
         console.log("new Size" + size, radius);
         this.size = size;
@@ -456,7 +461,7 @@ class Loader {
             this.imgLoaded = true;
             this.draw();
         };
-        this.loadingInterval = null;
+        this.animationInterval = null;
         this.rotateAnimation = null;
         this.init();
     }
@@ -508,9 +513,22 @@ class Loader {
             );
         }
     }
+    showWithFlickerEffect() {
+        clearInterval(this.animationInterval);
+        this.createDots(false);
+        this.flickerEffect();
+    }
+    flickerEffect() {
+        this.animationInterval = setInterval(() => {
+            this.dots.forEach((dot) => {
+                dot.updateColor();
+            });
+            this.draw();
+        }, 100);
+    }
 
     showWithRotateEffect() {
-        clearInterval(this.loadingInterval);
+        clearInterval(this.animationInterval);
         this.createDots(false);
         this.rotateEffect();
     }
@@ -528,7 +546,7 @@ class Loader {
         this.loadingEffect();
     }
     loadingEffect() {
-        this.loadingInterval = setInterval(() => {
+        this.animationInterval = setInterval(() => {
             this.dots.forEach((dot) => {
                 dot.updateOpacity();
             });
@@ -926,7 +944,8 @@ class Responsive {
     }
 }
 class LoadingChecker {
-    constructor() {
+    constructor(gameHelper) {
+        this.gameHelper = gameHelper;
         this.images = resource.images;
         this.audios = resource.audios;
         this.loadedCount = 0;
@@ -946,24 +965,29 @@ class LoadingChecker {
         return false;
     }
     checkAllResourcesLoaded(handleLoaded) {
-        // const loadingTime = 0;
-        // setInterval(() => {
-        //     loadingTime += 1;
-        // }, 1000);
-        // const _handleLoaded = () => {
-        //     if (loadingTime >= 3) {
-        //         handleLoaded();
-        //         return;
-        //     }
-        //     setTimeout(() => handleLoaded(), 2000);
-        // };
+        let loadingTime = 0;
+        const timeInterval =setInterval(() => {
+            loadingTime += 1;
+        }, 1000);
+        const showAlert = () => {
+            this.gameHelper.loader.showWithFlickerEffect();
+            document.querySelector(".alert").classList.remove("hidden");
+            document.querySelector("#alert-btn").addEventListener("click", () => handleLoaded());
+        };
+        const _handleLoaded = () => {
+            clearInterval(timeInterval);
+            if (loadingTime >= 3) {
+                return showAlert();
+            }
+            setTimeout(() => showAlert(), 3000);
+        };
         this.images.forEach((imageSrc) => {
             const image = new Image();
             image.src = imageSrc;
             image.onload = () => {
                 this.updateProcess();
                 if (this.isAllResourceLoaded()) {
-                    handleLoaded();
+                    _handleLoaded();
                 }
             };
             image.onerror = () => {
@@ -976,7 +1000,7 @@ class LoadingChecker {
             audio.addEventListener("canplaythrough", () => {
                 this.updateProcess();
                 if (this.isAllResourceLoaded()) {
-                    handleLoaded();
+                    _handleLoaded();
                 }
             });
             audio.onerror = () => {
@@ -988,8 +1012,8 @@ class LoadingChecker {
 class GameHelper {
     constructor() {
         this.viewPort = new Responsive();
+        this.loadingChecker = new LoadingChecker(this);
         this.loader = new Loader();
-        this.loadingChecker = new LoadingChecker();
         this.init();
     }
     init() {
@@ -998,7 +1022,6 @@ class GameHelper {
             this.enableLandscapeFullscreen();
         });
         this.viewPort.listener(() => {
-            console.log("change");
             this.loader.init();
             this.loader.updateDots();
         });
